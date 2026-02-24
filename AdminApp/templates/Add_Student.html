@@ -2,67 +2,97 @@
 {% extends 'Dashboard.html' %}
 {% block content %}
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <div class="bg-light rounded h-100 p-4">
-                            <h6 class="mb-4">Add Student</h6>
-                            <form method="post">
-                                {% csrf_token %}
-                                <div class="row mb-3">
-                                    <label  class="col-sm-2 col-form-label">Name</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="Name" name="name">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" name="email" id="inputEmail3">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label  class="col-sm-2 col-form-label">Date of Birth</label>
-                                    <div class="col-sm-10">
-                                        <input type="date" class="form-control" name="dob" id="DateOfBirth">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Id</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="id" id="id">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Class</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="class" id="class">
-                                    </div>
-                                </div>
-                                <fieldset class="row mb-3">
-                                    <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
-                                    <div class="col-sm-10">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="gender" id="gridRadios1" value="option1" checked="">
-                                            <label class="form-check-label" for="gridRadios1">
-                                                Male
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="gender" id="gridRadios2" value="option2">
-                                            <label class="form-check-label" for="gridRadios2">
-                                                Female
-                                            </label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                                
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </form>
-                        </div>
+        <h6 class="mb-4">Add Student</h6>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="Name" name="name">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" name="email" id="inputEmail3">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Date of Birth</label>
+                <div class="col-sm-10">
+                    <input type="date" class="form-control" name="dob" id="DateOfBirth">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputPassword3" class="col-sm-2 col-form-label">Id</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="id" id="id">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Class</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="class" id="class">
+                        <option value="">-- Select Class --</option>
+                        <option value="1">Class 1</option>
+                        <option value="2">Class 2</option>
+                        <option value="3">Class 3</option>
+                        <option value="4">Class 4</option>
+                        <option value="5">Class 5</option>
+                    </select>
+                </div>
+            </div>
+            <fieldset class="row mb-3">
+                <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
+                <div class="col-sm-10">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="gender" id="gender" value="option1"
+                            checked="">
+                        <label class="form-check-label" for="gridRadios1">
+                            Male
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="gender" id="gender" value="option2">
+                        <label class="form-check-label" for="gridRadios2">
+                            Female
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary" onclick="return must()">Submit</button>
+        </form>
+    </div>
+    <script>
+        function must() {
+            name = document.getElementById("Name").value;
+            email = document.getElementById("inputEmail3").value;
+            dob = document.getElementById("DateOfBirth").value;
+            id = document.getElementById("id").value;
+            Class = document.getElementById("class").value;
+            gender = document.getElementById("gender").value;
+            if (name == '' || email == '' || dob == '' || id == '' || Class == '' || gender == '') {
+                alert("All fields are required");
+                return false;
+            }
+            else {
+                alert("Student added successfully");
+                return true;
+            }
+
+        }
+    </script>
 </body>
+
 </html>
 {% endblock %}

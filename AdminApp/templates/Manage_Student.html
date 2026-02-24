@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% extends 'Dashboard.html' %}
+{% block content %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="col-12 mt-5">
+        <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Responsive Table</h6>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col"> Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">DOB</th>
+                            <th scope="col">Id</th>
+                            <th scope="col">Class</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Actions</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>John</td>
+                            <td>Doe</td>
+                            <td>jhon@email.com</td>
+                            <td>USA</td>
+                            <td>123</td>
+                            <td>Member</td>
+                        </tr>
+                        
+                                              
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+{% endblock %}

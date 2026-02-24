@@ -36,3 +36,6 @@ def admin_logout(request):
     del request.session['password'] 
     return redirect(login)
 
+def manage_student(request):
+    return render(request,'Manage_Student.html')
+

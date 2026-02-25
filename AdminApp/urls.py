@@ -11,6 +11,7 @@ urlpatterns=[
     path('add_class/',views.add_class,name='add_class'),
     path('manage_class/',views.manage_class,name='manage_class'),
     path('add_subject/',views.add_subject,name='add_subject'),
+    path('save_class/',views.save_class,name='save_class'),
 
 
 ]

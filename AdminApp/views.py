@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
+from AdminApp.models import *
 
 
 
@@ -45,4 +46,11 @@ def manage_class(request):
 def add_subject(request):
     return render(request,'Add_Subject.html')
 
+def save_class(request):
+    if request.method=='POST':
+        Class_Name=request.POST.get('class_name')
+        Section=request.POST.get('section')
+        obj= ClassDb(Class_Name=Class_Name,Section=Section)
+        obj.save()
+        return redirect(save_class)        
 

@@ -38,4 +38,11 @@ def admin_logout(request):
 
 def manage_student(request):
     return render(request,'Manage_Student.html')
+def add_class(request):
+    return render(request,'Add_Class.html')
+def manage_class(request):
+    return render(request,'Manage_Class.html') 
+def add_subject(request):
+    return render(request,'Add_Subject.html')
+
 

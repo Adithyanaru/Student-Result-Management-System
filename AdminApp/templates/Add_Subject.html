@@ -11,19 +11,19 @@
 
 <body>
     <div class="bg-light rounded h-100 p-4">
-        <h6 class="mb-4">Horizontal Form</h6>
-        <form method="POST" action="{#}">
+        <h6 class="mb-4">Add Subject</h6>
+        <form method="POST" action="{% url 'save_subject' %}">
             {% csrf_token %}
             <div class="row mb-3">
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Subject Name</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputEmail3" name="name">
+                    <input type="text" class="form-control" id="inputEmail3" name="subject_name">
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="inputPassword3" class="col-sm-2 col-form-label">Subject Code</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputPassword3" name="code">
+                    <input type="text" class="form-control" id="inputPassword3" name="subject_code">
                 </div>
             </div>
            
@@ -31,6 +31,24 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if messages %}
+    {% for msg in messages %}
+         {% if msg.tags == 'success' %}
+            <script>
+                swal('{{msg}}','','success')
+            </script>
+        {% elif msg.tags == 'warning' %}
+            <script>
+                swal('{{msg}}','','warning')
+            </script>
+        {% elif msg.tags == 'error' %}
+            <script>
+                swal('{{msg}}','','error')
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 
 </body>
 

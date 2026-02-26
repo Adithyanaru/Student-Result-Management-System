@@ -11,7 +11,16 @@ urlpatterns=[
     path('add_class/',views.add_class,name='add_class'),
     path('manage_class/',views.manage_class,name='manage_class'),
     path('add_subject/',views.add_subject,name='add_subject'),
+    path('manage_subject/',views.manage_subject,name='manage_subject'),
     path('save_class/',views.save_class,name='save_class'),
+    # path('manage_class/',views.manage_class,name='manage_class'),
+    path('delete_class/<int:c_id>/',views.delete_class,name='delete_class'),
+    path('edit_class/<int:cl_id>/',views.edit_class,name='edit_class'),
+    path('update_class/<int:cl_id>/',views.update_class,name='update_class'),
+    path('save_subject/',views.save_subject,name='save_subject'),
+    path('delete_subject/<int:sub_id>/',views.delete_subject,name='delete_subject'),
+    path('edit_subject/<int:s_id>/',views.edit_subject,name='edit_subject'),
+    path('update_subject/<int:s_id>/',views.update_subject,name='update_subject'),
 
 
 ]

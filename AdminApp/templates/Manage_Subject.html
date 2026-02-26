@@ -18,30 +18,29 @@
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Class Name</th>
-                            <th scope="col">Section</th>
-                            <th scope="col">Created At</th>
+                            <th scope="col"> Subject Name</th>
+                            <th scope="col">Subject Code</th>
+                            <th scope="col">Created At</th> 
                             <th scope="col">Updated At</th>
                             <th scope="col">Action</th>
-                           
+                        
 
                         </tr>
                     </thead>
                     <tbody>
-                        {% for i in data %}
+                        {% for sub in data %}
                         <tr>
-                            <th scope="row">{{ forloop.counter }}</th>
-                            <td>{{ i.Class_Name }}</td>
-                            <td>{{ i.Section }}</td>
-                            <td>{{ i.Created_At }}</td>
-                            <td>{{ i.Updated_At }}</td>
+                            <th scope="row">{{ sub.id }}</th>
+                            <td>{{ sub.Subject_Name }}</td>
+                            <td>{{ sub.Subject_Code }}</td>
+                            <td>{{ sub.Created_At }}</td>
+                            <td>{{ sub.Updated_At }}</td>
                             <td>
-                                <a href="{% url 'edit_class' i.id %}" class="btn btn-primary">Edit</a>
-                                <a href="{% url 'delete_class' i.id %}" class="btn btn-danger">Delete</a>
-                            </td>   
-                            
+                                <a href="{% url 'edit_subject' sub.id %}" class="btn btn-sm btn-primary">Edit</a>
+                                <a href="{% url 'delete_subject' sub.id%}" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
                         </tr>
-                        {% endfor %}
+                        {% endfor%}
                         
                                               
                     </tbody>
@@ -68,6 +67,7 @@
         {% endif %}
     {% endfor %}
 {% endif %}
+
 
 </html>
 {% endblock %}

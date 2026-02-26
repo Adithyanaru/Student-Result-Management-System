@@ -41,14 +41,14 @@
             <div class="row mb-3">
                 <label class="col-sm-2 col-form-label">Class</label>
                 <div class="col-sm-10">
+                    
                     <select class="form-control" name="class" id="class">
                         <option value="">-- Select Class --</option>
-                        <option value="1">Class 1</option>
-                        <option value="2">Class 2</option>
-                        <option value="3">Class 3</option>
-                        <option value="4">Class 4</option>
-                        <option value="5">Class 5</option>
+                        {% for c in classes %}
+                        <option value="{{c.id}}">{{c.Class_Name}}-{{c.Section}}</option>
+                        {% endfor %}
                     </select>
+                    
                 </div>
             </div>
             <fieldset class="row mb-3">

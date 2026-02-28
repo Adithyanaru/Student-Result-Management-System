@@ -76,6 +76,8 @@
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="{% url 'add_subject' %}" class="dropdown-item">Add Subjects</a>
                             <a href="{% url 'manage_subject' %}" class="dropdown-item">Manage Subjects</a>
+                            <a href="{% url 'add_subject_combination' %}" class="dropdown-item">Add Subject Combination</a>
+                            <a href="{% url 'manage_subject_combination' %}" class="dropdown-item">Manage Subject Combination</a>
                             
                         </div>
                     </div>
@@ -88,6 +90,13 @@
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="{% url 'add_class' %}" class="dropdown-item"> Add class</a>
                             <a href="{% url 'manage_class'%}" class="dropdown-item"> Manage Class</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Notice</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'add_notice' %}" class="dropdown-item"> Add Notice</a>
+                            <a href="{% url 'manage_notice'%}" class="dropdown-item"> Manage Notice</a>
                         </div>
                     </div>
                 </div>

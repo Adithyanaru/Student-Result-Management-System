@@ -43,7 +43,8 @@ def admin_logout(request):
     return redirect(login)
 
 def manage_student(request):
-    return render(request,'Manage_Student.html')
+    student=StudentDb.objects.all()
+    return render(request,'Manage_Student.html',{'student':student})
 def add_class(request):
     return render(request,'Add_Class.html')
 # def manage_class(request):
@@ -108,7 +109,82 @@ def update_subject(request,s_id):
         s.save()
         messages.success(request,"Subject Updated Successfully")
         return redirect(manage_subject)
-    
-   
-    
-        
+def save_student(request):
+    if request.method=='POST':
+        Name=request.POST.get('name')
+        Email=request.POST.get('email')
+        Dob=request.POST.get('dob')
+        Class_id=request.POST.get('class')
+        Roll_number=request.POST.get('roll_number')
+        Gender=request.POST.get('gender')
+        Phone_number=request.POST.get('phone_number')
+        obj= StudentDb(Name=Name,Email=Email,Dob=Dob,Class_id=Class_id,Roll_Number=Roll_number,gender=Gender,Phone_number=Phone_number)
+        obj.save()
+        messages.success(request,"Student Added Successfully")
+        return redirect(add_student)    
+def delete_student(request,s_id):
+    s=StudentDb.objects.get(id=s_id)
+    s.delete()
+    messages.success(request,"Student Deleted Successfully")
+    return redirect(manage_student)
+def edit_student(request,st_id):
+    studata=StudentDb.objects.get(id=st_id)
+    classes=ClassDb.objects.all()
+    return render(request,'Edit_Student.html',{'studata':studata,'classes':classes})
+
+def update_student(request,st_id):
+    if request.method=='POST':
+        Name=request.POST.get('name')
+        Email=request.POST.get('email')
+        Dob=request.POST.get('dob')
+        Class_id=request.POST.get('class')
+        Gender=request.POST.get('gender')
+        Phone_number=request.POST.get('phone_number')
+        s=StudentDb.objects.get(id=st_id)  
+        s.Name=Name
+        s.Email=Email
+        s.Dob=Dob
+        s.Class_id=Class_id
+        s.gender=Gender
+        s.Phone_number=Phone_number
+        s.save()
+        messages.success(request,"Student Updated Successfully")
+        return redirect(manage_student)
+def add_subject_combination(request):
+    classes=ClassDb.objects.all()
+    subjects=SubjectDb.objects.all()
+    return render(request,'Add_Subject_Combination.html',{'classes':classes,'subjects':subjects})
+def save_subject_combination(request):
+    if request.method=='POST':
+        Class_id = request.POST.get('class')
+        Subject_id = request.POST.get('subject')
+
+        obj = SubjectCombinationDb(
+            Class_Section_id=Class_id,      # foreign key id save
+            Subject_Name_id=Subject_id
+        )
+        obj.save()
+
+        messages.success(request,"Subject Combination Added Successfully")
+        return redirect(add_subject_combination)
+def manage_subject_combination(request):
+    data=SubjectCombinationDb.objects.all() 
+    return render(request,'Manage_Subject_Combination.html',{'data':data}) 
+def delete_subject_combination(request,sc_id):
+    s=SubjectCombinationDb.objects.get(id=sc_id)
+    s.delete()
+    messages.success(request,"Subject Combination Deleted Successfully")
+    return redirect(manage_subject_combination)
+def add_notice(request):
+    return render(request,'Add_Notice.html')
+def save_notice(request):
+    if request.method=='POST':
+        Notice_Title=request.POST.get('notice_title')
+        Notice_details=request.POST.get('notice_details')
+        obj= NoticeDb(Notice_Title=Notice_Title,Notice_Details=Notice_details)
+        obj.save()
+        messages.success(request,"Notice Added Successfully")
+        return redirect(add_notice)
+def manage_notice(request):
+    data=NoticeDb.objects.all()
+    return render(request,'Manage_Notice.html',{'data':data})

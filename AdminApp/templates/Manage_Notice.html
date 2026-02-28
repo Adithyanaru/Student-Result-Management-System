@@ -12,36 +12,28 @@
 <body>
     <div class="col-12 mt-5">
         <div class="bg-light rounded h-100 p-4">
-            <h6 class="mb-4">Responsive Table</h6>
+            <h6 class="mb-4">Manage Notice</h6>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col"> Name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">DOB</th> 
-                            <th scope="col">Class</th>
-                            <th scope="col">Roll Number</th>
-                            <th scope="col">Gender</th>
-                            <th scope="col">Phone Number</th>
+                            <th scope="col"> Notice Title</th>
+                            <th scope="col">Notice Details</th>
+                            <th scope="col">Updated At</th> 
                             <th scope="col">Actions</th>
 
                         </tr>
                     </thead>
                     <tbody>
-                        {% for s in student %}
+                        {% for s in data %}
                         <tr>
                             <th scope="row">{{ forloop.counter }}</th>
-                            <td>{{ s.Name }}</td>
-                            <td>{{ s.Email }}</td>
-                            <td>{{ s.Dob }}</td>
-                            <td>{{ s.Class }}</td>
-                            <td>{{ s.Roll_Number }}</td>
-                            <td>{{ s.gender }}</td>
-                            <td>{{ s.Phone_number }}</td>
-                            <td><a href="{% url 'edit_student' s.id %}" class="btn btn-primary">Edit</a>
-                                <a href="{% url 'delete_student' s.id %}" class="btn btn-danger">Delete</td>
+                            <td>{{ s.Notice_Title }}</td>
+                            <td>{{ s.Notice_Details }}</td>
+                            <td>{{ s.Updated_At }}</td>
+                            <td><a href="#" class="btn btn-primary">Edit</a>
+                                <a href="#" class="btn btn-danger">Delete</td>
                         </tr>
                         {% endfor%}
                         

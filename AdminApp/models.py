@@ -41,9 +41,11 @@ class MarksDb(models.Model):
              return f"{self.Student.Name} - {self.Subject.Subject_Name} - {self.Marks}"    
 class ResultDb(models.Model):
     Student=models.ForeignKey(StudentDb,on_delete=models.CASCADE,null=True,blank=True)
-    Total_Marks=models.IntegerField(null=True,blank=True)
+    Subject=models.ForeignKey(SubjectDb,on_delete=models.CASCADE,null=True,blank=True)
+    Marks=models.IntegerField(null=True,blank=True)
     Percentage=models.FloatField(null=True,blank=True)
     Grade=models.CharField(max_length=100,null=True,blank=True)
+    Class=models.ForeignKey(ClassDb,on_delete=models.CASCADE,null=True,blank=True)
     Created_At=models.DateTimeField(auto_now_add=True)  
     Updated_At=models.DateTimeField(auto_now=True)
     def __str__(self):

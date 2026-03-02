@@ -33,6 +33,10 @@ urlpatterns=[
     path('add_notice/',views.add_notice,name='add_notice'), 
     path('save_notice/',views.save_notice,name='save_notice'),
     path('manage_notice/',views.manage_notice,name='manage_notice'),
+    path('add_result/',views.add_result,name='add_result'),
+    # path('get_students_subjects', views.get_students_subjects, name="get_students_subjects"),
+    path('get_students_subjects', views.get_students_subjects, name="get_students_subjects"),
+    path('save_result/',views.save_result,name='save_result'),
     
 
 

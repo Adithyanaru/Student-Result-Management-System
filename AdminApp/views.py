@@ -188,3 +188,97 @@ def save_notice(request):
 def manage_notice(request):
     data=NoticeDb.objects.all()
     return render(request,'Manage_Notice.html',{'data':data})
+
+def add_result(request):
+    classes=ClassDb.objects.all()
+    return render(request,'Add_Result.html',{'classes':classes})
+
+# from django.http import JsonResponse
+# def get_students_subjects(request):
+#     class_id = request.GET.get('class_id')
+#     if class_id:
+#         students = list(StudentDb.objects.filter(Class_id=class_id).values('id', 'Name', 'Roll_Number'))
+#         subject_combinations = list(SubjectCombinationDb.objects.filter(Class_Section_id=class_id).select_related('Subject_Name').values( 'Subject_Name'))
+#         subject=[{'id':sc.Subject_Name.id,'name':sc.Subject_Name.Subject_Name} for sc in subject_combinations]
+#         return JsonResponse({'students': students, 'subjects': subject})
+
+#     return JsonResponse({'students': [], 'subjects': []})
+
+
+from django.http import JsonResponse
+
+def get_students_subjects(request):
+    class_id = request.GET.get('class_id')
+
+    if class_id:
+        # students
+        students = StudentDb.objects.filter(Class=class_id)
+        student_list = []
+        for s in students:
+            student_list.append({
+                'id': s.id,
+                'Name': s.Name
+            })
+
+        # subjects for that class
+        subjects = SubjectCombinationDb.objects.filter(Class_Section_id=class_id).select_related('Subject_Name')
+
+        subject_list = []
+        for sub in subjects:
+            subject_list.append({
+                'id': sub.Subject_Name.id,
+                'name': sub.Subject_Name.Subject_Name
+            })
+
+        return JsonResponse({
+            'students': student_list,
+            'subjects': subject_list
+        })
+
+    return JsonResponse({'students': [], 'subjects': []})
+
+from django.shortcuts import redirect
+from .models import ResultDb
+
+# def save_result(request):
+#     if request.method == "POST":
+#         class_id = request.POST.get('class')
+#         student_id = request.POST.get('student')
+
+#         # get all marks
+#         for key, value in request.POST.items():
+#             if key.startswith("marks_"):
+#                 subject_id = key.split("_")[1]
+#                 mark = value
+
+#                 if mark != "":
+#                     ResultDb.objects.create(
+#                         Class_id=class_id,
+#                         Student_id=student_id,
+#                         Subject_id=subject_id,
+#                         Marks=mark
+#                     )
+
+#         return redirect('add_result')  # back to page
+def save_result(request):
+    if request.method == "POST":
+        class_id = request.POST.get('class')
+        student_id = request.POST.get('student')
+
+        # 🔴 DELETE OLD RESULT FIRST (important)
+        ResultDb.objects.filter(Class_id=class_id, Student_id=student_id).delete()
+
+        # 🟢 SAVE NEW RESULT
+        for key, value in request.POST.items():
+            if key.startswith("mark_") and value != "":
+                subject_id = key.split("_")[1]
+
+                ResultDb.objects.create(
+                    Class_id=class_id,
+                    Student_id=student_id,
+                    Subject_id=subject_id,
+                    Marks=value
+                )
+
+        return redirect('add_result')
+    

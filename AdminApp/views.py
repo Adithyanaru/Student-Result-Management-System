@@ -281,4 +281,59 @@ def save_result(request):
                 )
 
         return redirect('add_result')
-    
+from collections import defaultdict
+
+from collections import defaultdict
+
+from collections import defaultdict
+
+from collections import defaultdict
+
+from collections import defaultdict
+
+def manage_result(request):
+    class_id = request.GET.get('class')
+    classes = ClassDb.objects.all()
+
+    grouped = []
+    subjects = []
+
+    if class_id:
+        # 🔥 Get subjects only for selected class
+        subjects = SubjectCombinationDb.objects.filter(
+            Class_Section_id=class_id
+        ).select_related('Subject_Name')
+
+        subject_list = [s.Subject_Name for s in subjects]
+
+        results = ResultDb.objects.select_related(
+            'Class', 'Student', 'Subject'
+        ).filter(Class_id=class_id)
+
+        temp = defaultdict(lambda: {
+            'class': None,
+            'student': None,
+            'marks': {},
+            'total': 0
+        })
+
+        for r in results:
+            temp[r.Student.id]['class'] = r.Class
+            temp[r.Student.id]['student'] = r.Student
+            temp[r.Student.id]['marks'][r.Subject.id] = r.Marks
+            temp[r.Student.id]['total'] += r.Marks
+
+        grouped = temp.values()
+
+    context = {
+        'grouped_results': grouped,
+        'subjects': subject_list if class_id else [],
+        'classes': classes,
+        'selected_class': class_id
+    }
+
+    return render(request, 'Manage_Result.html', context)
+def delete_result(request, student_id, class_id):
+    ResultDb.objects.filter(Student_id=student_id, Class_id=class_id).delete()
+    messages.success(request, "Result deleted successfully!")
+    return redirect(f'/manage/manage_result/?class={class_id}')

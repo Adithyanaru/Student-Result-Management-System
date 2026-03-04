@@ -12,6 +12,7 @@ class StudentDb(models.Model):
     Class=models.ForeignKey('ClassDb', on_delete=models.CASCADE,null=True,blank=True)
     gender=models.CharField(max_length=100,null=True,blank=True,choices=Gender_Choices)
     Phone_number=models.CharField(max_length=100,null=True,blank=True)
+    Student_Photo = models.ImageField(upload_to="student_photos/", null=True, blank=True)
     def __str__(self):
         return self.Name
     

@@ -69,6 +69,11 @@
                                    onclick="return confirm('Are you sure you want to delete this result?');">
                                    Delete
                                 </a>
+                                <a href="{% url 'edit_result' data.student.id selected_class %}" 
+                                    class="btn btn-primary btn-sm"
+                                    onclick="return confirm('Are you sure you want to edit this result?');">
+                                    Edit
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}

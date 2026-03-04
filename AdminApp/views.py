@@ -9,7 +9,12 @@ from django.contrib import messages
 
 # Create your views here.
 def dashboard(request):
-    return render(request,'Dashboard.html')
+    total_student=StudentDb.objects.count()
+    context={'total_student':total_student,
+             'total_class':ClassDb.objects.count(),
+             'total_subject':SubjectDb.objects.count(),
+             'total_result':ResultDb.objects.values('Class_id').distinct().count(),}
+    return render(request,'Dashboard.html',context)
 
 def login(request):
     return render(request,'Login.html')
@@ -41,6 +46,7 @@ def admin_logout(request):
     del request.session['username']
     del request.session['password'] 
     return redirect(login)
+
 
 def manage_student(request):
     student=StudentDb.objects.all()
@@ -110,46 +116,73 @@ def update_subject(request,s_id):
         messages.success(request,"Subject Updated Successfully")
         return redirect(manage_subject)
 def save_student(request):
-    if request.method=='POST':
-        Name=request.POST.get('name')
-        Email=request.POST.get('email')
-        Dob=request.POST.get('dob')
-        Class_id=request.POST.get('class')
-        Roll_number=request.POST.get('roll_number')
-        Gender=request.POST.get('gender')
-        Phone_number=request.POST.get('phone_number')
-        obj= StudentDb(Name=Name,Email=Email,Dob=Dob,Class_id=Class_id,Roll_Number=Roll_number,gender=Gender,Phone_number=Phone_number)
+    if request.method == 'POST':
+        Name = request.POST.get('name')
+        Email = request.POST.get('email')
+        Dob = request.POST.get('dob')
+        Class_id = request.POST.get('class')
+        Roll_number = request.POST.get('roll_number')
+        Gender = request.POST.get('gender')
+        Phone_number = request.POST.get('phone_number')
+
+        Photo = request.FILES.get('photo')   
+
+        obj = StudentDb(
+            Name=Name,
+            Email=Email,
+            Dob=Dob,
+            Class_id=Class_id,
+            Roll_Number=Roll_number,
+            gender=Gender,
+            Phone_number=Phone_number,
+            Student_Photo=Photo  
+        )
+
         obj.save()
-        messages.success(request,"Student Added Successfully")
+        messages.success(request, "Student Added Successfully")
         return redirect(add_student)    
 def delete_student(request,s_id):
     s=StudentDb.objects.get(id=s_id)
     s.delete()
     messages.success(request,"Student Deleted Successfully")
     return redirect(manage_student)
-def edit_student(request,st_id):
-    studata=StudentDb.objects.get(id=st_id)
-    classes=ClassDb.objects.all()
+def edit_student(request, st_id):
+    studata = StudentDb.objects.get(id=st_id)
+    classes = ClassDb.objects.all()
     return render(request,'Edit_Student.html',{'studata':studata,'classes':classes})
 
-def update_student(request,st_id):
-    if request.method=='POST':
-        Name=request.POST.get('name')
-        Email=request.POST.get('email')
-        Dob=request.POST.get('dob')
-        Class_id=request.POST.get('class')
-        Gender=request.POST.get('gender')
-        Phone_number=request.POST.get('phone_number')
-        s=StudentDb.objects.get(id=st_id)  
-        s.Name=Name
-        s.Email=Email
-        s.Dob=Dob
-        s.Class_id=Class_id
-        s.gender=Gender
-        s.Phone_number=Phone_number
+
+def update_student(request, st_id):
+    if request.method == 'POST':
+
+        Name = request.POST.get('name')
+        Email = request.POST.get('email')
+        Dob = request.POST.get('dob')
+        Roll_number = request.POST.get('roll_number')
+        Class_id = request.POST.get('class')
+        Gender = request.POST.get('gender')
+        Phone_number = request.POST.get('phone_number')
+        Photo = request.FILES.get('photo')
+
+        s = StudentDb.objects.get(id=st_id)
+
+        s.Name = Name
+        s.Email = Email
+        s.Dob = Dob
+        s.Roll_Number = Roll_number
+        s.Class_id = Class_id
+        s.gender = Gender
+        s.Phone_number = Phone_number
+
+
+        if Photo:
+            s.Student_Photo = Photo
+
         s.save()
-        messages.success(request,"Student Updated Successfully")
-        return redirect(manage_student)
+
+        messages.success(request, "Student Updated Successfully")
+
+        return redirect('manage_student')
 def add_subject_combination(request):
     classes=ClassDb.objects.all()
     subjects=SubjectDb.objects.all()
@@ -283,14 +316,6 @@ def save_result(request):
         return redirect('add_result')
 from collections import defaultdict
 
-from collections import defaultdict
-
-from collections import defaultdict
-
-from collections import defaultdict
-
-from collections import defaultdict
-
 def manage_result(request):
     class_id = request.GET.get('class')
     classes = ClassDb.objects.all()
@@ -337,3 +362,57 @@ def delete_result(request, student_id, class_id):
     ResultDb.objects.filter(Student_id=student_id, Class_id=class_id).delete()
     messages.success(request, "Result deleted successfully!")
     return redirect(f'/manage/manage_result/?class={class_id}')
+def edit_result(request, student_id, class_id):
+
+    student = StudentDb.objects.get(id=student_id)
+    class_obj = ClassDb.objects.get(id=class_id)
+
+    subjects = SubjectCombinationDb.objects.filter(Class_Section_id=class_id)
+
+    results = ResultDb.objects.filter(Student=student)
+
+    marks = {}
+
+    for r in results:
+        marks[r.Subject.id] = r.Marks
+
+    context = {
+        'student': student,
+        'class': class_obj,
+        'subjects': subjects,
+        'marks': marks
+    }
+
+    return render(request,'Edit_Result.html',context)
+def update_result(request, student_id, class_id):
+
+    student = StudentDb.objects.get(id=student_id)
+
+    subjects = SubjectCombinationDb.objects.filter(Class_Section_id=class_id)
+
+    for sub in subjects:
+
+        mark = request.POST.get(f'mark_{sub.Subject_Name.id}')
+
+        result = ResultDb.objects.get(Student=student, Subject=sub.Subject_Name)
+
+        result.Mark = mark
+        result.save()
+
+    return redirect('manage_results')
+
+    if request.method=='POST':
+        old_passord=request.POST.get('oldpassword')
+        new_password=request.POST.get('newpassword')
+        confirm_password=request.POST.get('confirmpassword')
+        if newpassword != confirmpassword:
+            messages.error(request,"Password doesn't match")
+        user=authenticate(username=request.user.username,password=oldpassword)
+        if user is not None:
+            user.set_password(new_password)
+            user.save()
+            messages.success(request,"Password changed successfully")
+            return redirect(login)
+        else:
+            return redirect(change_password)
+    return render(request,'Change_Password.html')

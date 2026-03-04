@@ -1,75 +1,95 @@
-<!DOCTYPE html>
 {% extends 'Dashboard.html' %}
 {% block content %}
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<div class="col-12 mt-5">
+    <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">Manage Students</h6>
 
-<body>
-    <div class="col-12 mt-5">
-        <div class="bg-light rounded h-100 p-4">
-            <h6 class="mb-4">Responsive Table</h6>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col"> Name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">DOB</th> 
-                            <th scope="col">Class</th>
-                            <th scope="col">Roll Number</th>
-                            <th scope="col">Gender</th>
-                            <th scope="col">Phone Number</th>
-                            <th scope="col">Actions</th>
+        ```
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>DOB</th>
+                        <th>Class</th>
+                        <th>Roll Number</th>
+                        <th>Gender</th>
+                        <th>Phone Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for s in student %}
-                        <tr>
-                            <th scope="row">{{ forloop.counter }}</th>
-                            <td>{{ s.Name }}</td>
-                            <td>{{ s.Email }}</td>
-                            <td>{{ s.Dob }}</td>
-                            <td>{{ s.Class }}</td>
-                            <td>{{ s.Roll_Number }}</td>
-                            <td>{{ s.gender }}</td>
-                            <td>{{ s.Phone_number }}</td>
-                            <td><a href="{% url 'edit_student' s.id %}" class="btn btn-primary">Edit</a>
-                                <a href="{% url 'delete_student' s.id %}" class="btn btn-danger">Delete</td>
-                        </tr>
-                        {% endfor%}
-                        
-                                              
-                    </tbody>
-                </table>
-            </div>
+                <tbody>
+                    {% for s in student %}
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>
+                            {% if s.Student_Photo %}
+                            <img src="{{ s.Student_Photo.url }}" width="50" height="50" style="border-radius:50%;">
+                            {% else %}
+                            No Photo
+                            {% endif %}
+                        </td>
+
+                        <td>{{ s.Name }}</td>
+                        <td>{{ s.Email }}</td>
+                        <td>{{ s.Dob }}</td>
+                        <td>{{ s.Class }}</td>
+                        <td>{{ s.Roll_Number }}</td>
+                        <td>{{ s.gender }}</td>
+                        <td>{{ s.Phone_number }}</td>
+
+                        <td>
+                            <a href="{% url 'edit_student' s.id %}" class="btn btn-primary btn-sm">Edit</a>
+
+                            <a href="{% url 'delete_student' s.id %}" class="btn btn-danger btn-sm">
+                                Delete
+                            </a>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
         </div>
     </div>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if messages %}
-    {% for msg in messages %}
-         {% if msg.tags == 'success' %}
-            <script>
-                swal('{{msg}}','','success')
-            </script>
-        {% elif msg.tags == 'warning' %}
-            <script>
-                swal('{{msg}}','','warning')
-            </script>
-        {% elif msg.tags == 'error' %}
-            <script>
-                swal('{{msg}}','','error')
-            </script>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-</body>
+    ```
 
-</html>
+</div>
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+{% if messages %}
+{% for msg in messages %}
+
+{% if msg.tags == 'success' %}
+
+<script>
+    swal('{{msg}}', '', 'success')
+</script>
+
+{% elif msg.tags == 'warning' %}
+
+<script>
+    swal('{{msg}}', '', 'warning')
+</script>
+
+{% elif msg.tags == 'error' %}
+
+<script>
+    swal('{{msg}}', '', 'error')
+</script>
+
+{% endif %}
+
+{% endfor %}
+{% endif %}
+
 {% endblock %}

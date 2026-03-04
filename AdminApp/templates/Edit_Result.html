@@ -1,0 +1,42 @@
+{% extends 'Dashboard.html' %}
+{% load custom_filters %}
+{% block content %}
+
+<div class="col-12 mt-5">
+    <div class="bg-light rounded h-100 p-4">
+
+        <h4>Edit Result</h4>
+
+        <form method="post" action="{% url 'update_result' student.id %}">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label>Student</label>
+                <input type="text" value="{{student.Name}}" class="form-control" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label>Class</label>
+                <input type="text" value="{{class.Class_Name}}" class="form-control" readonly>
+            </div>
+
+            {% for sub in subjects %}
+
+            <div class="mb-3">
+
+                <label>{{ sub.Subject_Name.Subject_Name }}</label>
+
+                <input type="number" name="mark_{{sub.Subject_Name.id}}" value="{{marks|get_item:sub.id}}" class="form-control">
+
+            </div>
+
+            {% endfor %}
+
+            <button type="submit" class="btn btn-success">Update Result</button>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

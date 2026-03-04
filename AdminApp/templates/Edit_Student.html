@@ -1,107 +1,111 @@
-<!DOCTYPE html>
 {% extends 'Dashboard.html' %}
 {% block content %}
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4">Edit Student</h6>
 
-<body>
-    <div class="bg-light rounded h-100 p-4">
-        <h6 class="mb-4">Edit Student</h6>
-        <form method="post" action="{% url 'update_student' studata.id %}">
-            {% csrf_token %}
-            <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">Name</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="Name" name="name" value="{{studata.Name}}">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                <div class="col-sm-10">
-                    <input type="email" class="form-control" name="email" id="inputEmail3" value="{{studata.Email}}">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">Date of Birth</label>
-                <div class="col-sm-10">
-                    <input type="date" class="form-control" name="dob" id="DateOfBirth" value="{{studata.Dob}}">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="inputPassword3" class="col-sm-2 col-form-label">Roll Number</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" name="roll_number" id="roll_number" value="{{studata.Roll_Number}}" readonly>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">Phone Number</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" name="phone_number" id="phone_number" value="{{studata.Phone_number}}">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">Class</label>
-                <div class="col-sm-10">
-                    
-                    <select class="form-control" name="class" id="class">
-                        <option value="">-- Select Class --</option>
-                        {% for c in classes %}
-                        <option value="{{c.id}}" {% if studata.Class.id == c.id %} selected {% endif %}>
-                            {{c.Class_Name}}-{{c.Section}}</option>
-                        {% endfor %}
-                    </select>
-                    
-                </div>
-            </div>
-            <fieldset class="row mb-3">
-                <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
-                <div class="col-sm-10">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" id="gender1" value="Male"
-                            {% if studata.gender == "Male" %} checked {% endif %}>
-                        <label class="form-check-label" for="gender1">
-                            Male
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" id="gender2" value="Female"
-                            {% if studata.gender == "Female" %} checked {% endif %}>
-                        <label class="form-check-label" for="gender2">
-                            Female
-                        </label>
-                    </div>
-                </div>
-                
-            </fieldset>
+```
+<form method="POST" action="{% url 'update_student' studata.id %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    
 
-            <button type="submit" class="btn btn-primary" onclick="return must()">Submit</button>
-        </form>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="name" value="{{studata.Name}}">
+        </div>
     </div>
-    <script>
-        function must() {
-            name = document.getElementById("Name").value;
-            email = document.getElementById("inputEmail3").value;
-            dob = document.getElementById("DateOfBirth").value;
-            id = document.getElementById("id").value;
-            Class = document.getElementById("class").value;
-            gender = document.getElementById("gender").value;
-            if (name == '' || email == '' || dob == '' || id == '' || Class == '' || gender == '') {
-                alert("All fields are required");
-                return false;
-            }
-            else {
-                alert("Student updated successfully");
-                return true;
-            }
 
-        }
-    </script>
-</body>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Email</label>
+        <div class="col-sm-10">
+            <input type="email" class="form-control" name="email" value="{{studata.Email}}">
+        </div>
+    </div>
 
-</html>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Date of Birth</label>
+        <div class="col-sm-10">
+            <input type="date" class="form-control" name="dob" value="{{studata.Dob|date:'Y-m-d'}}">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Roll Number</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="roll_number" value="{{studata.Roll_Number}}">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Phone Number</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="phone_number" value="{{studata.Phone_number}}">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Class</label>
+        <div class="col-sm-10">
+            <select class="form-control" name="class">
+
+                {% for c in classes %}
+                <option value="{{c.id}}"
+                {% if studata.Class.id == c.id %}
+                selected
+                {% endif %}
+                >
+                {{c.Class_Name}}-{{c.Section}}
+                </option>
+                {% endfor %}
+
+            </select>
+        </div>
+    </div>
+
+    <fieldset class="row mb-3">
+        <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
+
+        <div class="col-sm-10">
+
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" value="Male"
+                {% if studata.gender == 'Male' %}checked{% endif %}>
+                <label class="form-check-label">
+                    Male
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" value="Female"
+                {% if studata.gender == 'Female' %}checked{% endif %}>
+                <label class="form-check-label">
+                    Female
+                </label>
+            </div>
+
+        </div>
+    </fieldset>
+
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Student Photo</label>
+        <div class="col-sm-10">
+
+            {% if student.Student_Photo %}
+            <img src="{{studata.Student_Photo.url}}" width="80" style="margin-bottom:10px;">
+            {% endif %}
+
+            <input type="file" class="form-control" name="photo">
+        </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-success">Update Student</button>
+
+</form>
+```
+
+</div>
+
 {% endblock %}

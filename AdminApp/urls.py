@@ -27,8 +27,8 @@ urlpatterns=[
     path('save_student/',views.save_student,name='save_student'),
     path('manage_student/',views.manage_student,name='manage_student'),
     path('delete_student/<int:s_id>/',views.delete_student,name='delete_student'),
-    path('edit_student/<int:st_id>/',views.edit_student,name='edit_student'),
-    path('update_student/<int:st_id>/',views.update_student,name='update_student'),
+    path('edit_student/<int:st_id>/', views.edit_student, name='edit_student'),
+    path('update_student/<int:st_id>/', views.update_student, name='update_student'),
     
     path('add_subject_combination/',views.add_subject_combination,name='add_subject_combination'),
     path('save_subject_combination/',views.save_subject_combination,name='save_subject_combination'),
@@ -45,7 +45,10 @@ urlpatterns=[
     path('save_result/',views.save_result,name='save_result'),
     path('manage_result/',views.manage_result,name='manage_result'),
     path('delete_result/<int:student_id>/<int:class_id>/', views.delete_result, name='delete_result'),
+    path('edit_result/<int:student_id>/<int:class_id>/', views.edit_result, name='edit_result'),
+    path('update_result/<int:student_id>/<int:class_id>/', views.update_result, name='update_result'),
     
+   
 
 
 ]

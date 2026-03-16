@@ -117,7 +117,27 @@
                             <a href="{% url 'manage_result'%}" class="dropdown-item"> Manage Result</a>
                         </div>
                     </div>
-                   
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                                class="far fa-file-alt me-2"></i>Result</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'payment' %}" class="dropdown-item">Arrears Payments</a>
+
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                                class="far fa-file-alt me-2"></i>Notes</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'add_note' %}" class="dropdown-item">Add notes</a>
+
+                        </div>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'manage_notes' %}" class="dropdown-item">Manage_notes</a>
+
+                        </div>
+                    </div>
+
                 </div>
             </nav>
         </div>

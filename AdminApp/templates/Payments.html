@@ -1,0 +1,58 @@
+{% extends 'Dashboard.html' %}
+{% block content %}
+
+<div class="col-12 mt-5">
+    <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">Payments</h6>
+
+        ```
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Student</th>
+                        <th>Subject</th>
+                        <th>Amount</th>
+                        <th>Payment Status</th>
+                        <th>Date</th>
+
+                </thead>
+
+                <tbody>
+
+                    {% for payment in arrear_payments %}
+
+                    <tr>
+
+                        <td>{{ payment.counter }}</td>
+
+                        <td>{{ payment.Student }}</td>
+
+                        <td>{{ payment.Subject }}</td>
+
+                        <td>₹{{ payment.Amount }}</td>
+
+                        <td>
+                            <span class="badge bg-success">
+                                {{ payment.Payment_Status }}
+                            </span>
+                        </td>
+
+                        <td>{{ payment.Created_At }}</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    ```
+
+</div>
+
+
+{% endblock %}

@@ -28,6 +28,7 @@ class ClassDb(models.Model):
 class SubjectDb(models.Model):
     Subject_Name=models.CharField(max_length=100,null=True,blank=True)
     Subject_Code=models.CharField(max_length=100,null=True,blank=True)
+    Credit = models.IntegerField(null=True, blank=True)
     Created_At=models.DateTimeField(auto_now_add=True)  
     Updated_At=models.DateTimeField(auto_now=True)
     def __str__(self):
@@ -49,6 +50,7 @@ class ResultDb(models.Model):
     Percentage=models.FloatField(null=True,blank=True)
     Grade=models.CharField(max_length=100,null=True,blank=True)
     Class=models.ForeignKey(ClassDb,on_delete=models.CASCADE,null=True,blank=True)
+    Status = models.CharField(max_length=50,null=True,blank=True)
     Created_At=models.DateTimeField(auto_now_add=True)  
     Updated_At=models.DateTimeField(auto_now=True)
     def __str__(self):
@@ -69,3 +71,22 @@ class NoticeDb(models.Model):
     Updated_At=models.DateTimeField(auto_now=True)
     def __str__(self):
         return f"{self.Notice_Title} - {self.Notice_Details}"
+class ArrearApplication(models.Model):
+
+    Student = models.ForeignKey(StudentDb, on_delete=models.CASCADE)
+    Subject = models.ForeignKey(SubjectDb, on_delete=models.CASCADE)
+    Amount = models.IntegerField()
+    Payment_Status = models.CharField(max_length=50, default="Pending")
+    Created_At = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"{self.Student.Name} - {self.Subject.Subject_Name}"
+
+class NotesDb(models.Model):
+
+    Subject = models.CharField(max_length=100,blank=True,null=True)
+    Semester = models.CharField(max_length=100,blank=True,null=True)
+    Department = models.CharField(max_length=100)
+    Notes = models.FileField(upload_to="notes/")
+   
+    def __str__(self):
+        return f"{self.Subject.Subject_Name}"

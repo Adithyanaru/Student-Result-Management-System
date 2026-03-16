@@ -19,11 +19,13 @@ from django.urls import path,include
 import AdminApp.urls
 from django.contrib.staticfiles.urls import static,staticfiles_urlpatterns
 from Student_Result_Management_System import settings
+import WebApp.urls
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('manage/',include(AdminApp.urls)),
+    path('stu/',include(WebApp.urls)),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

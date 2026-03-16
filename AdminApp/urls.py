@@ -42,12 +42,21 @@ urlpatterns=[
     path('add_result/',views.add_result,name='add_result'),
     # path('get_students_subjects', views.get_students_subjects, name="get_students_subjects"),
     path('get_students_subjects', views.get_students_subjects, name="get_students_subjects"),
+    path('add_result/',views.add_result,name='add_result'),
     path('save_result/',views.save_result,name='save_result'),
     path('manage_result/',views.manage_result,name='manage_result'),
     path('delete_result/<int:student_id>/<int:class_id>/', views.delete_result, name='delete_result'),
     path('edit_result/<int:student_id>/<int:class_id>/', views.edit_result, name='edit_result'),
     path('update_result/<int:student_id>/<int:class_id>/', views.update_result, name='update_result'),
     
+    path('payment/',views.payment,name='payment'),
+    
+    path('add_note/',views.add_note,name='add_note'),
+    path('save_note/',views.save_note,name='save_note'),
+    path('manage_notes/',views.manage_notes,name='manage_notes'),
+    path('delete_note/<int:note_id>/',views.delete_note,name='delete_note'),
+    path('edit_note/<int:note_id>/',views.edit_note,name='edit_note'),
+    path('update_note/<int:note_id>/',views.update_note,name='update_note'),
    
 
 

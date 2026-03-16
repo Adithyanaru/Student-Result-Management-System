@@ -1,0 +1,89 @@
+{% extends 'Dashboard.html' %}
+{% block content %}
+
+<div class="col-12 mt-5">
+    <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">Manage Students</h6>
+
+        ```
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Subjects</th>
+                        <th>Semester</th>
+                        <th>Department</th>
+                        <th>Note</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for n in notes %}
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+
+                       
+
+                        <td>{{ n.Subject }}</td>
+                        <td>{{ n.Semester }}</td>
+                        <td>{{ n.Department }}</td>
+                         <td>
+                            {% if n.Notes %}
+                            <img src="{{ s.Notes.url }}" width="50" height="50" style="border-radius:50%;">
+                            {% else %}
+                            No Notes
+                            {% endif %}
+                        </td>
+                        
+
+                        <td>
+                            <a href="{% url 'edit_note' n.id %} " class="btn btn-primary btn-sm">Edit</a>
+
+                            <a href="{% url 'delete_note' n.id %}" class="btn btn-danger btn-sm">
+                                Delete
+                            </a>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    ```
+
+</div>
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+{% if messages %}
+{% for msg in messages %}
+
+{% if msg.tags == 'success' %}
+
+<script>
+    swal('{{msg}}', '', 'success')
+</script>
+
+{% elif msg.tags == 'warning' %}
+
+<script>
+    swal('{{msg}}', '', 'warning')
+</script>
+
+{% elif msg.tags == 'error' %}
+
+<script>
+    swal('{{msg}}', '', 'error')
+</script>
+
+{% endif %}
+
+{% endfor %}
+{% endif %}
+
+{% endblock %}

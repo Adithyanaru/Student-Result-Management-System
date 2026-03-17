@@ -16,5 +16,6 @@ urlpatterns = [
     path('save_arrear_payment/',views.save_arrear_payment,name='save_arrear_payment'),
     path('download_marksheet/',views.download_marksheet,name='download_marksheet'),
     
-   
+    path('notes/',views.notes,name='notes'),
+   path('download-note/<int:id>/', views.download_note, name='download_note'),
 ]

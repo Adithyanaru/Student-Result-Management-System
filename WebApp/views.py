@@ -19,6 +19,7 @@ from io import BytesIO
 import base64
 import os
 from dotenv import load_dotenv
+from django.http import FileResponse
 
 load_dotenv()
 
@@ -599,6 +600,12 @@ def student_id_card(request):
     doc.build(elements)
 
     return response
+def notes(request):
+    notes = NotesDb.objects.all().order_by('-id')
+    return render(request,"Notes.html",{"notes":notes})
+def download_note(request, id):
+    note = NotesDb.objects.get(id=id)
+    return FileResponse(note.Notes.open(), as_attachment=True)
 
 
 

@@ -602,7 +602,7 @@ def student_id_card(request):
     return response
 def notes(request):
     notes = NotesDb.objects.all().order_by('-id')
-    return render(request,"Notes.html",{"notes":notes})
+    return render(request, "Notes.html", {"notes": notes})
 def download_note(request, id):
     note = NotesDb.objects.get(id=id)
     return FileResponse(note.Notes.open(), as_attachment=True)

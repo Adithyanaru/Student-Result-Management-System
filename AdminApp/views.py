@@ -851,3 +851,7 @@ def admin_chat(request):
     chats = ChatMessage.objects.all().order_by("-created_at")
 
     return render(request,"Admin_Chat.html",{"chats":chats})
+def delete_chat(request, id):
+    chat = ChatMessage.objects.get(id=id)
+    chat.delete()
+    return redirect('student_chat')

@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div class="col-12 mt-5">
+    <!-- <div class="col-12 mt-5">
         <div class="bg-light rounded h-100 p-4">
             <h6 class="mb-4">Student Messages</h6>
 
@@ -85,8 +85,106 @@
         </div>
         ```
 
+    </div> -->
+    <div class="container">
+
+        {% regroup chats by student_name as student_chats %}
+
+        {% for student in student_chats %}
+
+        <div class="card mb-4">
+
+            <div class="card-header bg-primary text-white">
+                {{ student.grouper }}
+            </div>
+
+            <div class="card-body chat-area">
+
+                {% for chat in student.list %}
+
+                <div class="msg student">
+                    <b>Student:</b> {{ chat.message }}
+                </div>
+
+                {% if chat.reply %}
+                <div class="msg admin">
+                    <b>Admin:</b> {{ chat.reply }}
+                </div>
+                {% endif %}
+                <a href="{% url 'delete_chat' chat.id %}" class="btn btn-danger btn-sm"
+                    onclick="return confirm('Delete this message?')">
+                    Delete
+                </a>
+
+                {% if not chat.reply %}
+
+                <form method="POST" class="reply-box">
+
+                    {% csrf_token %}
+
+                    <input type="hidden" name="chat_id" value="{{ chat.id }}">
+
+                    <input type="text" name="reply" class="form-control" placeholder="Type reply..." required>
+
+                    <button type="submit" class="btn btn-primary mt-2">Send</button>
+
+                </form>
+
+                {% endif %}
+
+                <hr>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
     </div>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <style>
+        .chat-area {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .msg {
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            max-width: 70%;
+            font-size: 14px;
+        }
+
+        .student {
+            background: #dbeafe;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .admin {
+            background: #e5e7eb;
+        }
+
+        .reply-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .reply-box input {
+            flex: 1;
+        }
+
+        .reply-box button {
+            white-space: nowrap;
+        }
+    </style>
 </body>
 
 </html>

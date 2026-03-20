@@ -582,11 +582,11 @@
     <button id="chatButton" class="chat-button">
         💬
     </button>
-    <div class="chat-box">
+    <div class="chat-box" id="chatBox">
 
         <div class="chat-header">
             Chat with Admin
-            <span id="closeChat">✖</span>
+            <span id="closeChat" style="cursor: pointer;">✖</span>
         </div>
 
         <div class="chat-messages">
@@ -624,12 +624,16 @@
         const chatBox = document.getElementById("chatBox");
         const closeChat = document.getElementById("closeChat");
 
-        chatBtn.onclick = function () {
-            chatBox.style.display = "block";
+        if (chatBtn && chatBox) {
+            chatBtn.onclick = function () {
+                chatBox.style.display = "block";
+            };
         }
 
-        closeChat.onclick = function () {
-            chatBox.style.display = "none";
+        if (closeChat && chatBox) {
+            closeChat.onclick = function () {
+                chatBox.style.display = "none";
+            };
         }
 
     </script>

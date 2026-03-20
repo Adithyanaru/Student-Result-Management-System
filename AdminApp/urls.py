@@ -60,7 +60,7 @@ urlpatterns=[
     
     path('admin_chat/',views.admin_chat,name='admin_chat'),
     path('student_chat/',views.student_chat,name='student_chat'),
-   
+    path('delete-chat/<int:id>/', views.delete_chat, name='delete_chat'),
 
 
 ]

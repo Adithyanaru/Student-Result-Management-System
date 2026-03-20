@@ -57,6 +57,9 @@ urlpatterns=[
     path('delete_note/<int:note_id>/',views.delete_note,name='delete_note'),
     path('edit_note/<int:note_id>/',views.edit_note,name='edit_note'),
     path('update_note/<int:note_id>/',views.update_note,name='update_note'),
+    
+    path('admin_chat/',views.admin_chat,name='admin_chat'),
+    path('student_chat/',views.student_chat,name='student_chat'),
    
 
 

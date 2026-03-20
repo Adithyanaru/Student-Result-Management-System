@@ -26,6 +26,8 @@ load_dotenv()
 
 
 # Create your views here.
+
+
 def home(request):
 
     if 'st_login' not in request.session:
@@ -33,8 +35,26 @@ def home(request):
 
     student = StudentDb.objects.get(id=request.session['st_login'])
 
-    return render(request,'Home.html',{'student':student})
+    if request.method == "POST":
+        msg = request.POST.get("message")
 
+        if msg:
+            ChatMessage.objects.create(
+                student_name=student.Name,
+                message=msg
+            )
+
+        # redirect prevents duplicate submission
+        return redirect('home')
+
+    chats = ChatMessage.objects.filter(
+        student_name=student.Name
+    ).order_by("created_at")
+
+    return render(request,'Home.html',{
+        'student':student,
+        'chats':chats
+    })
 
 def profile(request): 
     data=StudentDb.objects.get(id=request.session['st_login']) 

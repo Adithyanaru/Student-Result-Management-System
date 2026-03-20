@@ -579,8 +579,143 @@
     </div>
     <!-- Contact End -->
 
+    <button id="chatButton" class="chat-button">
+        💬
+    </button>
+    <div class="chat-box">
 
-    <!-- Footer Start -->
+        <div class="chat-header">
+            Chat with Admin
+            <span id="closeChat">✖</span>
+        </div>
+
+        <div class="chat-messages">
+
+            {% for chat in chats %}
+
+            <div class="msg student">
+                {{ chat.message }}
+            </div>
+
+            {% if chat.reply %}
+            <div class="msg admin">
+                {{ chat.reply }}
+            </div>
+            {% endif %}
+
+            {% endfor %}
+
+        </div>
+
+        <form method="POST" class="chat-input">
+
+            {% csrf_token %}
+
+            <input type="text" name="message" placeholder="Type message..." required>
+
+            <button type="submit">Send</button>
+
+        </form>
+
+    </div>
+    <script>
+
+        const chatBtn = document.getElementById("chatButton");
+        const chatBox = document.getElementById("chatBox");
+        const closeChat = document.getElementById("closeChat");
+
+        chatBtn.onclick = function () {
+            chatBox.style.display = "block";
+        }
+
+        closeChat.onclick = function () {
+            chatBox.style.display = "none";
+        }
+
+    </script>
+    <style>
+        .chat-button {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .chat-box {
+            position: fixed;
+            bottom: 160px;
+            right: 20px;
+            width: 320px;
+            height: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            z-index: 9999;
+        }
+
+        .chat-header {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f4f6f9;
+            flex-direction: column;
+            display: flex;
+
+
+        }
+
+        .msg {
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            max-width: 70%;
+        }
+
+        .student {
+            background: #d1e7ff;
+            margin-left: auto;
+        }
+
+        .admin {
+            background: #e2e3e5;
+        }
+
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+        }
+
+        .chat-input button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+        }
+    </style> <!-- Footer Start -->
     <div class="container-fluid position-relative overlay-top bg-dark text-white-50 py-5" style="margin-top: 90px;">
         <div class="container mt-5 pt-5">
             <div class="row">
@@ -667,6 +802,7 @@
             class="fa fa-angle-double-up"></i></a>
 
 
+
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
@@ -678,6 +814,13 @@
 
     <!-- Template Javascript -->
     <script src="{% static 'assets/main/js/main.js' %}"></script>
+    <script>
+        const chatMessages = document.querySelector(".chat-messages");
+
+        if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
 </body>
 
 </html>

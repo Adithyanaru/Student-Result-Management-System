@@ -1,0 +1,93 @@
+{% extends 'Dashboard.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="col-12 mt-5">
+        <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">Student Messages</h6>
+
+            ```
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-striped">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Student</th>
+                            <th>Message</th>
+                            <th>Reply</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for chat in chats %}
+
+                        <tr>
+
+                            <td>{{ chat.student_name }}</td>
+
+                            <td>{{ chat.message }}</td>
+
+                            <td>
+                                {% if chat.reply %}
+                                <span class="text-success">{{ chat.reply }}</span>
+                                {% else %}
+                                <span class="text-muted">No reply yet</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+
+                                {% if not chat.reply %}
+
+                                <form method="POST" class="d-flex">
+
+                                    {% csrf_token %}
+
+                                    <input type="hidden" name="chat_id" value="{{ chat.id }}">
+
+                                    <input type="text" name="reply" class="form-control me-2"
+                                        placeholder="Type reply..." required>
+
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        Send
+                                    </button>
+
+                                </form>
+
+                                {% else %}
+
+                                <span class="badge bg-success">Replied</span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+        ```
+
+    </div>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</body>
+
+</html>
+{% endblock %}

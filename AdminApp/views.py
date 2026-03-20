@@ -823,3 +823,31 @@ def update_note(request, note_id):
     note.Notes = request.FILES.get('note')
     note.save()
     return redirect('manage_notes')
+
+
+def student_chat(request):
+
+    if request.method == "POST":
+        chat_id = request.POST.get("chat_id")
+        reply = request.POST.get("reply")
+
+        chat = ChatMessage.objects.get(id=chat_id)
+        chat.reply = reply
+        chat.save()
+
+    chats = ChatMessage.objects.all().order_by("-created_at")
+
+    return render(request, "Admin_Chat.html", {"chats": chats})
+def admin_chat(request):
+
+    if request.method == "POST":
+        chat_id = request.POST.get("chat_id")
+        reply = request.POST.get("reply")
+
+        chat = ChatMessage.objects.get(id=chat_id)
+        chat.reply = reply
+        chat.save()
+
+    chats = ChatMessage.objects.all().order_by("-created_at")
+
+    return render(request,"Admin_Chat.html",{"chats":chats})

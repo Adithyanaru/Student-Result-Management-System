@@ -7,22 +7,49 @@ from django.contrib import messages
 from collections import defaultdict
 from django.core.mail import send_mail
 from django.conf import settings
-
-
+from django.db.models import Avg
 
 
 
 
 
 # Create your views here.
+# def dashboard(request):
+    # total_student=StudentDb.objects.count()
+    # context={'total_student':total_student,
+    #          'total_class':ClassDb.objects.count(),
+    #          'total_subject':SubjectDb.objects.count(),
+    #          'total_result':ResultDb.objects.values('Class_id').distinct().count(),}
+    # return render(request,'Dashboard.html',context)
 def dashboard(request):
-    total_student=StudentDb.objects.count()
-    context={'total_student':total_student,
-             'total_class':ClassDb.objects.count(),
-             'total_subject':SubjectDb.objects.count(),
-             'total_result':ResultDb.objects.values('Class_id').distinct().count(),}
-    return render(request,'Dashboard.html',context)
 
+    total_student = StudentDb.objects.count()
+
+    class_performance = (
+        ResultDb.objects
+        .values('Class__Class_Name','Class__Section')
+        .annotate(avg_marks=Avg('Marks'))
+    )
+
+    class_labels = []
+    class_marks = []
+
+    for c in class_performance:
+        label = f"{c['Class__Class_Name']} - {c['Class__Section']}"
+        class_labels.append(label)
+        class_marks.append(round(c['avg_marks'],2))
+
+
+    context = {
+        'total_student': total_student,
+        'total_class': ClassDb.objects.count(),
+        'total_subject': SubjectDb.objects.count(),
+        'total_result': ResultDb.objects.count(),
+        'class_labels': class_labels,
+        'class_marks': class_marks
+    }
+
+    return render(request,'Dashboard.html',context)
 def login(request):
     return render(request,'Login.html')
 

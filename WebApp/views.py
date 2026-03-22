@@ -186,10 +186,17 @@ def view_result(request):
 
     student_id = request.session['student_id']
 
+    # Student details
     data = StudentDb.objects.get(id=student_id)
 
+    # All results
     results = ResultDb.objects.filter(Student_id=student_id)
+
+    # Arrear subjects
     arrear_subjects = results.filter(Status="Arrear")
+
+    # Check if student already applied for arrear exam
+    applied = ArrearApplication.objects.filter(Student_id=student_id).exists()
 
     total_credit = 0
     total_points = 0
@@ -237,78 +244,6 @@ def view_result(request):
         total_credit += credit
         total_points += credit * gp
 
-    sgpa = 0
-    if total_credit > 0:
-        sgpa = total_points / total_credit
-
-    context = {
-        "results": results,
-        "sgpa": round(sgpa,2),
-        "data": data,
-        "pass_count": pass_count,
-        "fail_count": fail_count,
-        "arrear_subjects": arrear_subjects,
-    }
-
-    return render(request,"View_Result.html",context)
-
-    # Check login session
-    if 'student_id' not in request.session:
-        return redirect('student_login')
-
-    student_id = request.session['student_id']
-
-    # Get student data
-    data = StudentDb.objects.get(id=student_id)
-
-    # Get results
-    results = ResultDb.objects.filter(Student_id=student_id)
-
-    total_credit = 0
-    total_points = 0
-
-    for r in results:
-
-        marks = r.Marks or 0
-        credit = r.Subject.Credit or 0
-
-        # PASS / FAIL
-        if marks < 40:
-            status = "Arrear"
-            grade = "F"
-            gp = 0
-            fail_count  += 1
-        else:
-            status = "Pass"
-            pass_count   += 1
-
-            if marks >= 90:
-                grade = "A+"
-                gp = 10
-            elif marks >= 80:
-                grade = "A"
-                gp = 9
-            elif marks >= 70:
-                grade = "B+"
-                gp = 8
-            elif marks >= 60:
-                grade = "B"
-                gp = 7
-            elif marks >= 50:
-                grade = "C"
-                gp = 6
-            else:
-                grade = "D"
-                gp = 5
-
-        # Save grade and status
-        r.Status = status
-        r.Grade = grade
-        r.save()
-
-        total_credit += credit
-        total_points += credit * gp
-
     # SGPA calculation
     sgpa = 0
     if total_credit > 0:
@@ -318,44 +253,17 @@ def view_result(request):
         "results": results,
         "sgpa": round(sgpa, 2),
         "data": data,
-        "fail_count ": fail_count ,
-        "pass_count ": pass_count ,
+        "pass_count": pass_count,
+        "fail_count": fail_count,
+        "arrear_subjects": arrear_subjects,
+        "applied": applied
     }
 
     return render(request, "View_Result.html", context)
-
 def apply_arrear(request):
 
     student_id = request.session['student_id']
     arrears = ResultDb.objects.filter(Student_id=student_id, Status="Arrear")
-
-    if request.method == "POST":
-
-        subjects = request.POST.getlist("subjects")
-
-        # STORE SUBJECTS IN SESSION
-        request.session['arrear_subjects'] = subjects
-
-        amount = len(subjects) * 200
-
-        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-
-        payment = client.order.create({
-            "amount": amount * 100,
-            "currency": "INR",
-            "payment_capture": "1"
-        })
-
-        return render(request,"payment.html",{
-            "payment":payment,
-            "amount":amount
-        })
-
-    return render(request,"Apply_Arrear.html",{"arrears":arrears})
-
-    student_id = request.session['student_id']
-    arrears = ResultDb.objects.filter(Student_id=student_id, Status="Arrear")
-    paid = ArrearApplication.objects.filter(Student_id=student_id).exists()
 
     if request.method == "POST":
 
@@ -374,60 +282,13 @@ def apply_arrear(request):
             "payment_capture": "1"
         })
 
-        return render(request,"payment.html",{
+        return render(request,"Apply_Arrear.html",{
             "payment": payment,
-            "amount": amount,
-            "paid": paid
+            "amount": amount
         })
 
-    return render(request,"Apply_Arrear.html",{"arrears":arrears})
-
-    student_id = request.session['student_id']
-    arrears = ResultDb.objects.filter(Student_id=student_id, Status="Arrear")
-
-    if request.method == "POST":
-
-        subjects = request.POST.getlist("subjects")
-
-        amount = len(subjects) * 200   # Example ₹200 per subject
-
-        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-
-        payment = client.order.create({
-            "amount": amount * 100,
-            "currency": "INR",
-            "payment_capture": "1"
-        })
-
-        return render(request,"payment.html",{
-            "payment":payment,
-            "amount":amount,
-            "subjects":subjects
-        })
-
-    return render(request,"Apply_Arrear.html",{"arrears":arrears})
-
-
-
+    return render(request,"Apply_Arrear.html",{"arrears": arrears})
 def save_arrear_payment(request):
-
-    student_id = request.session['student_id']
-    subjects = request.session.get('arrear_subjects', [])
-
-    student = StudentDb.objects.get(id=student_id)
-
-    for sub in subjects:
-
-        subject = SubjectDb.objects.get(id=sub)
-
-        ArrearApplication.objects.create(
-            Student=student,
-            Subject=subject,
-            Amount=200,
-            Payment_Status="Paid"
-        )
-
-    return redirect('/stu/home/')
 
     student_id = request.session['student_id']
     subjects = request.session.get("arrear_subjects", [])
@@ -445,11 +306,14 @@ def save_arrear_payment(request):
             Payment_Status="Paid"
         )
 
-    return redirect('/stu/home/')
+    return redirect('home')
+def payment_list(request):
 
+    payments = ArrearApplication.objects.select_related('Student','Subject').all()
 
-
-
+    return render(request, "manage/payment.html", {
+        "payments": payments
+    })
 def download_marksheet(request):
 
     student_id = request.session['student_id']

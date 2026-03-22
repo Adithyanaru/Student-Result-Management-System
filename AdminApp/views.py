@@ -798,8 +798,14 @@ def update_result(request, student_id, class_id):
             return redirect(change_password)
     return render(request,'Change_Password.html')
 def payment(request):
-    arrear_payments = ArrearApplication.objects.all().order_by('-Created_At')
-    return render(request,'Payments.html',{'arrear_payments':arrear_payments})
+
+    arrear_payments = ArrearApplication.objects.select_related(
+        'Student', 'Subject'
+    ).all().order_by('-Created_At')
+
+    return render(request, 'Payments.html', {
+        'arrear_payments': arrear_payments
+    })
 
 def add_note(request):
     return render(request,'Add_Note.html')

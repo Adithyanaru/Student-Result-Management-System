@@ -21,30 +21,18 @@
 
                 <tbody>
 
-                    {% for payment in arrear_payments %}
+                    {% for p in arrear_payments %}
 
                     <tr>
-
-                        <td>{{ payment.counter }}</td>
-
-                        <td>{{ payment.Student }}</td>
-
-                        <td>{{ payment.Subject }}</td>
-
-                        <td>₹{{ payment.Amount }}</td>
-
-                        <td>
-                            <span class="badge bg-success">
-                                {{ payment.Payment_Status }}
-                            </span>
-                        </td>
-
-                        <td>{{ payment.Created_At }}</td>
-
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ p.Student.Name }}</td>
+                        <td>{{ p.Subject.Subject_Name }}</td>
+                        <td>{{ p.Amount }}</td>
+                        <td>{{ p.Payment_Status }}</td>
+                        <td>{{ p.Created_At }}</td>
                     </tr>
 
-                    {% endfor %}
-
+                    {% endfor%}
                 </tbody>
 
             </table>

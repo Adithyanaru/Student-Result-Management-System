@@ -334,7 +334,7 @@
             {% endif %}
 
         </div>
-        
+
 
 
 
@@ -351,49 +351,30 @@
 
     </div>
     <!-- Arrears Exam section -->
-        <div class="container mt-5">
+    <div class="container mt-5">
 
-            <h4 class="text-center">Arrear Exam Application</h4>
+        <h4 class="text-center">Arrear Exam Application</h4>
 
-            {% if arrear_subjects %}
+        {% if arrear_subjects %}
 
-            <div class="card shadow mt-3">
-                <div class="card-body">
-
-                    <p class="text-danger">
-                        You have arrears in the following subjects:
-                    </p>
-
-                    <ul>
-
-                        {% for sub in arrear_subjects %}
-
-                        <li>{{ sub.Subject.Subject_Name }}</li>
-
-                        {% endfor %}
-
-                    </ul>
-
-                    <div class="text-center mt-3">
-
-                        <a href="{% url 'apply_arrear' %}" class="btn btn-danger">
-                            Apply for Arrear Exam
-                        </a>
-
-                    </div>
-
-                </div>
-            </div>
-
-            {% else %}
-
-            <div class="alert alert-success text-center mt-3">
-                No arrears. You passed all subjects 🎉
-            </div>
-
-            {% endif %}
-
+        {% if applied %}
+        <div class="alert alert-success">
+            ✔ You have already applied for the arrear exam.
         </div>
+        {% else %}
+        <a href="{% url 'apply_arrear' %}" class="btn btn-danger">
+            Apply for Arrear Exam
+        </a>
+        {% endif %}
+
+        {% else %}
+        <div class="alert alert-success">
+            No arrears. You passed all subjects 🎉
+        </div>
+        {% endif %}
+
+
+    </div>
 
 
 

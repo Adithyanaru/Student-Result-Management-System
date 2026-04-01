@@ -1,67 +1,109 @@
-<!DOCTYPE html>
 {% extends 'Dashboard.html' %}
 {% block content %}
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=\, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4">Add Notes</h6>
 
-<body>
-    <div class="bg-light rounded h-100 p-4">
-        <h6 class="mb-4">Add Notes</h6>
-        <form method="POST" action="{% url 'save_note' %}" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="row mb-3">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Subject</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputEmail3" name="subject">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Semester</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputEmail3" name="semester">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="inputPassword3" class="col-sm-2 col-form-label">Department</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputPassword3" name="department">
-                </div>
-            </div>
-           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Note</label>
-            <div class="col-sm-10">
-                <input type="file" class="form-control" name="note" id="note">
-            </div>
+```
+<form method="POST" action="{% url 'save_note' %}" enctype="multipart/form-data" onsubmit="return validateForm()">
+    {% csrf_token %}
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Subject</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="subject" name="subject">
         </div>
-           
-            
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
     </div>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if messages %}
-    {% for msg in messages %}
-         {% if msg.tags == 'success' %}
-            <script>
-                swal('{{msg}}','','success')
-            </script>
-        {% elif msg.tags == 'warning' %}
-            <script>
-                swal('{{msg}}','','warning')
-            </script>
-        {% elif msg.tags == 'error' %}
-            <script>
-                swal('{{msg}}','','error')
-            </script>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-</body>
 
-</html>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Semester</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="semester" name="semester">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Department</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="department" name="department">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Note</label>
+        <div class="col-sm-10">
+            <input type="file" class="form-control" name="note" id="note">
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+```
+
+</div>
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+
+function validateForm(){
+
+    var subject = document.getElementById("subject").value.trim();
+    var semester = document.getElementById("semester").value.trim();
+    var department = document.getElementById("department").value.trim();
+    var note = document.getElementById("note").value;
+
+    if(subject == ""){
+        swal("Error","Subject is required","error");
+        return false;
+    }
+
+    if(!/^[A-Za-z0-9 ]+$/.test(subject)){
+        swal("Error","Subject can contain letters, numbers and spaces only","error");
+        return false;
+    }
+
+    if(semester == ""){
+        swal("Error","Semester is required","error");
+        return false;
+    }
+
+    if(!/^[0-9]+$/.test(semester)){
+        swal("Error","Semester must be a number","error");
+        return false;
+    }
+
+    if(department == ""){
+        swal("Error","Department is required","error");
+        return false;
+    }
+
+    if(!/^[A-Za-z ]+$/.test(department)){
+        swal("Error","Department must contain letters only","error");
+        return false;
+    }
+
+    if(note == ""){
+        swal("Error","Please upload a note file","error");
+        return false;
+    }
+
+    return true;
+}
+
+</script>
+
+{% if messages %}
+{% for msg in messages %}
+{% if msg.tags == 'success' %} <script>
+swal('{{msg}}','','success') </script>
+{% elif msg.tags == 'warning' %} <script>
+swal('{{msg}}','','warning') </script>
+{% elif msg.tags == 'error' %} <script>
+swal('{{msg}}','','error') </script>
+{% endif %}
+{% endfor %}
+{% endif %}
+
 {% endblock %}

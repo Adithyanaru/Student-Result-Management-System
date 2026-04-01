@@ -1,55 +1,76 @@
-<!DOCTYPE html>
 {% extends 'Dashboard.html' %}
 {% block content %}
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=\, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4">Add Class</h6>
 
-<body>
-    <div class="bg-light rounded h-100 p-4">
-        <h6 class="mb-4">Horizontal Form</h6>
-        <form method="POST" action="{% url 'save_class' %}">
-            {% csrf_token %}
-            <div class="row mb-3">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Class Name</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputEmail3" name="class_name">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="inputPassword3" class="col-sm-2 col-form-label">Section</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputPassword3" name="section">
-                </div>
-            </div>
-           
-            
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+```
+<form method="POST" action="{% url 'save_class' %}" onsubmit="return validateForm()">
+    {% csrf_token %}
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Class Name</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="class_name" name="class_name" required>
+        </div>
     </div>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if messages %}
-    {% for msg in messages %}
-         {% if msg.tags == 'success' %}
-            <script>
-                swal('{{msg}}','','success')
-            </script>
-        {% elif msg.tags == 'warning' %}
-            <script>
-                swal('{{msg}}','','warning')
-            </script>
-        {% elif msg.tags == 'error' %}
-            <script>
-                swal('{{msg}}','','error')
-            </script>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-</body>
 
-</html>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Section</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="section" name="section" required>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+```
+
+</div>
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+function validateForm(){
+
+    var className = document.getElementById("class_name").value.trim();
+    var section = document.getElementById("section").value.trim();
+
+    if(className == ""){
+        swal("Error","Class Name is required","error");
+        return false;
+    }
+
+    if(section == ""){
+        swal("Error","Section is required","error");
+        return false;
+    }
+
+    if(!/^[A-Za-z0-9 ]+$/.test(className)){
+        swal("Error","Class Name should contain only letters and numbers","error");
+        return false;
+    }
+
+    if(!/^[A-Za-z0-9 ]+$/.test(section)){
+        swal("Error","Section should contain letters and numbers only","error");
+        return false;
+    }
+
+    return true;
+}
+</script>
+
+{% if messages %}
+{% for msg in messages %}
+{% if msg.tags == 'success' %} <script>
+swal('{{msg}}','','success') </script>
+{% elif msg.tags == 'warning' %} <script>
+swal('{{msg}}','','warning') </script>
+{% elif msg.tags == 'error' %} <script>
+swal('{{msg}}','','error') </script>
+{% endif %}
+{% endfor %}
+{% endif %}
+
 {% endblock %}

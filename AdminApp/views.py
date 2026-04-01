@@ -64,7 +64,7 @@ def admin_logout(request):
 
 def admin_login(request):
     uname=request.POST.get('username')
-    pswd=request.POST.get('password')
+    pswd=request.POST.get('password')   
     if User.objects.filter(username__contains=uname).exists():
         user=authenticate(username=uname,password=pswd)
         if user is not None:

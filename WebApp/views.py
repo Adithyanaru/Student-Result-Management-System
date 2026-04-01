@@ -50,15 +50,22 @@ def home(request):
     chats = ChatMessage.objects.filter(
         student_name=student.Name
     ).order_by("created_at")
+    
+    notices = NoticeDb.objects.all().order_by('-Created_At')[:3]
 
     return render(request,'Home.html',{
         'student':student,
-        'chats':chats
+        'chats':chats,
+        'notices':notices
     })
 
 def profile(request): 
     data=StudentDb.objects.get(id=request.session['st_login']) 
-    return render(request,'Profile.html',{'data':data})
+    if 'st_login' not in request.session:
+        return redirect('st_login')
+    student = StudentDb.objects.get(id=request.session['st_login'])
+    return render(request,'Profile.html',{'data':data,
+                                          'student':student})
 def st_login(request):
     return render(request,'StudentLogin.html')
 
@@ -116,7 +123,6 @@ def verify_otp(request):
 
         if verification_check.status == "approved":
 
-            # create login session
             request.session['st_login'] = student_id
 
             return redirect("home")
@@ -438,17 +444,17 @@ def student_id_card(request):
 
     styles = getSampleStyleSheet()
 
-    # Title
+
     elements.append(Paragraph("STUDENT RESULT MANAGEMENT", styles['Title']))
     elements.append(Paragraph("Semester Marksheet", styles['Heading2']))
     elements.append(Spacer(1,20))
 
-    # Student Info
+
     elements.append(Paragraph(f"Name : {student.Name}", styles['Normal']))
     elements.append(Paragraph(f"Register No : {student.Roll_Number}", styles['Normal']))
     elements.append(Spacer(1,20))
 
-    # Table Data
+ 
     data = [["Subject","Marks","Grade"]]
 
     total_marks = 0
@@ -463,7 +469,6 @@ def student_id_card(request):
 
         total_marks += r.Marks
 
-    # Create Table
     table = Table(data, colWidths=[250,100,100])
 
     table.setStyle(TableStyle([
@@ -476,7 +481,6 @@ def student_id_card(request):
 
     elements.append(Spacer(1,20))
 
-    # SGPA
     sgpa = round(total_marks/(len(results)*10),2)
 
     elements.append(Paragraph(f"SGPA : {sgpa}", styles['Heading3']))
@@ -490,6 +494,7 @@ def notes(request):
 def download_note(request, id):
     note = NotesDb.objects.get(id=id)
     return FileResponse(note.Notes.open(), as_attachment=True)
+
 
 
 

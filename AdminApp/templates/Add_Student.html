@@ -4,112 +4,144 @@
 <div class="bg-light rounded h-100 p-4">
     <h6 class="mb-4">Add Student</h6>
 
-    ```
-    <form method="post" action="{% url 'save_student' %}" enctype="multipart/form-data">
-        {% csrf_token %}
+```
+<form method="post" action="{% url 'save_student' %}" enctype="multipart/form-data" onsubmit="return must()">
+    {% csrf_token %}
 
-        <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Name</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="Name" name="name">
-            </div>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="Name" name="name" required>
         </div>
+    </div>
 
-        <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Email</label>
-            <div class="col-sm-10">
-                <input type="email" class="form-control" name="email" id="inputEmail3">
-            </div>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Email</label>
+        <div class="col-sm-10">
+            <input type="email" class="form-control" name="email" id="inputEmail3" required>
         </div>
+    </div>
 
-        <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Date of Birth</label>
-            <div class="col-sm-10">
-                <input type="date" class="form-control" name="dob" id="DateOfBirth">
-            </div>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Date of Birth</label>
+        <div class="col-sm-10">
+            <input type="date" class="form-control" name="dob" id="DateOfBirth" required>
         </div>
+    </div>
 
-        <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Roll Number</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="roll_number" id="roll_number">
-            </div>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Roll Number</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="roll_number" id="roll_number" required>
         </div>
+    </div>
 
-        <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Phone Number</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="phone_number" id="phone_number">
-            </div>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Phone Number</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="phone_number" id="phone_number"
+                   pattern="[0-9]{10}" title="Enter 10 digit phone number" required>
         </div>
+    </div>
 
-        <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Class</label>
-            <div class="col-sm-10">
-                <select class="form-control" name="class" id="class">
-                    <option value="">-- Select Class --</option>
-                    {% for c in classes %}
-                    <option value="{{c.id}}">{{c.Class_Name}}-{{c.Section}}</option>
-                    {% endfor %}
-                </select>
-            </div>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Class</label>
+        <div class="col-sm-10">
+            <select class="form-control" name="class" id="class" required>
+                <option value="">-- Select Class --</option>
+                {% for c in classes %}
+                <option value="{{c.id}}">{{c.Class_Name}} - {{c.Section}}</option>
+                {% endfor %}
+            </select>
         </div>
+    </div>
 
-        <fieldset class="row mb-3">
-            <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
-            <div class="col-sm-10">
+    <fieldset class="row mb-3">
+        <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
+        <div class="col-sm-10">
 
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gender" value="Male" checked>
-                    <label class="form-check-label">
-                        Male
-                    </label>
-                </div>
-
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gender" value="Female">
-                    <label class="form-check-label">
-                        Female
-                    </label>
-                </div>
-
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" value="Male" checked>
+                <label class="form-check-label">
+                    Male
+                </label>
             </div>
-        </fieldset>
 
-        <!-- Student Photo Upload -->
-        <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Student Photo</label>
-            <div class="col-sm-10">
-                <input type="file" class="form-control" name="photo" id="photo">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" value="Female">
+                <label class="form-check-label">
+                    Female
+                </label>
             </div>
+
         </div>
+    </fieldset>
 
-        <button type="submit" class="btn btn-primary" onclick="return must()">Submit</button>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Student Photo</label>
+        <div class="col-sm-10">
+            <input type="file" class="form-control" name="photo" id="photo" required>
+        </div>
+    </div>
 
-    </form>
-    ```
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+```
 
 </div>
 
 <script>
-    function must() {
 
-        name = document.getElementById("Name").value;
-        email = document.getElementById("inputEmail3").value;
-        dob = document.getElementById("DateOfBirth").value;
-        roll = document.getElementById("roll_number").value;
-        Class = document.getElementById("class").value;
+function must(){
 
-        if (name == '' || email == '' || dob == '' || roll == '' || Class == '') {
-            alert("All fields are required");
-            return false;
-        }
-        else {
-            alert("Student added successfully");
-            return true;
-        }
+    var name = document.getElementById("Name").value.trim();
+    var email = document.getElementById("inputEmail3").value.trim();
+    var dob = document.getElementById("DateOfBirth").value;
+    var roll = document.getElementById("roll_number").value.trim();
+    var phone = document.getElementById("phone_number").value.trim();
+    var Class = document.getElementById("class").value;
+    var photo = document.getElementById("photo").value;
 
+    if(name == ""){
+        alert("Name is required");
+        return false;
     }
+
+    if(email == ""){
+        alert("Email is required");
+        return false;
+    }
+
+    if(dob == ""){
+        alert("Date of Birth is required");
+        return false;
+    }
+
+    if(roll == ""){
+        alert("Roll Number is required");
+        return false;
+    }
+
+    if(phone.length != 10){
+        alert("Phone number must be 10 digits");
+        return false;
+    }
+
+    if(Class == ""){
+        alert("Please select a class");
+        return false;
+    }
+
+    if(photo == ""){
+        alert("Please upload student photo");
+        return false;
+    }
+
+    alert("Student added successfully");
+    return true;
+}
+
 </script>
 
 {% endblock %}

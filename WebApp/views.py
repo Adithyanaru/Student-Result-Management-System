@@ -186,7 +186,9 @@ def edit_profile(request):
 
 
 def view_result(request):
-
+    if 'st_login' not in request.session:
+        return redirect('st_login')
+    student = StudentDb.objects.get(id=request.session['st_login'])
     if 'student_id' not in request.session:
         return redirect('student_login')
 
@@ -262,7 +264,8 @@ def view_result(request):
         "pass_count": pass_count,
         "fail_count": fail_count,
         "arrear_subjects": arrear_subjects,
-        "applied": applied
+        "applied": applied,
+        "student":student,
     }
 
     return render(request, "View_Result.html", context)
@@ -411,9 +414,8 @@ def download_marksheet(request):
 
     return response
 
-# OR code section
 
-def student_id_card(request):
+
     data = StudentDb.objects.get(id=request.session['st_login'])
 
     qr_data = f"Student: {data.Name}, Roll: {data.Roll_Number}"
@@ -490,7 +492,11 @@ def student_id_card(request):
     return response
 def notes(request):
     notes = NotesDb.objects.all().order_by('-id')
-    return render(request, "Notes.html", {"notes": notes})
+    if 'st_login' not in request.session:
+        return redirect('st_login')
+    student = StudentDb.objects.get(id=request.session['st_login'])
+    return render(request, "Notes.html", {"notes": notes,
+                                          "student":student})
 def download_note(request, id):
     note = NotesDb.objects.get(id=id)
     return FileResponse(note.Notes.open(), as_attachment=True)
@@ -503,236 +509,4 @@ def download_note(request, id):
 
 
 
-    student_id = request.session['student_id']
-
-    student = StudentDb.objects.get(id=student_id)
-    results = ResultDb.objects.filter(Student_id=student_id)
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="marksheet.pdf"'
-
-    doc = SimpleDocTemplate(response, pagesize=A4)
-
-    elements = []
-
-    styles = getSampleStyleSheet()
-
-    # Title
-    elements.append(Paragraph("STUDENT RESULT MANAGEMENT", styles['Title']))
-    elements.append(Paragraph("Semester Marksheet", styles['Heading2']))
-    elements.append(Spacer(1,20))
-
-    # Student Info
-    elements.append(Paragraph(f"Name : {student.Name}", styles['Normal']))
-    elements.append(Paragraph(f"Register No : {student.Roll_Number}", styles['Normal']))
-    elements.append(Spacer(1,20))
-
-    # Table Data
-    data = [["Subject","Marks","Grade"]]
-
-    total_marks = 0
-
-    for r in results:
-
-        data.append([
-            r.Subject.Subject_Name,
-            r.Marks,
-            r.Grade
-        ])
-
-        total_marks += r.Marks
-
-    # Create Table
-    table = Table(data, colWidths=[250,100,100])
-
-    table.setStyle(TableStyle([
-        ('GRID',(0,0),(-1,-1),1,colors.black),
-        ('BACKGROUND',(0,0),(-1,0),colors.lightgrey),
-        ('ALIGN',(1,1),(-1,-1),'CENTER')
-    ]))
-
-    elements.append(table)
-
-    elements.append(Spacer(1,20))
-
-    # SGPA
-    sgpa = round(total_marks/(len(results)*10),2)
-
-    elements.append(Paragraph(f"SGPA : {sgpa}", styles['Heading3']))
-
-    doc.build(elements)
-
-    return response
-
-    student_id = request.session['student_id']
-
-    student = StudentDb.objects.get(id=student_id)
-    results = ResultDb.objects.filter(Student_id=student_id)
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="marksheet.pdf"'
-
-    doc = SimpleDocTemplate(response, pagesize=A4)
-
-    elements = []
-
-    styles = getSampleStyleSheet()
-
-    # Title
-    elements.append(Paragraph("STUDENT RESULT MANAGEMENT", styles['Title']))
-    elements.append(Paragraph("Semester Marksheet", styles['Heading2']))
-    elements.append(Spacer(1,20))
-
-    # Student Info
-    elements.append(Paragraph(f"Name : {student.Name}", styles['Normal']))
-    elements.append(Paragraph(f"Register No : {student.Ro}", styles['Normal']))
-    elements.append(Spacer(1,20))
-
-    # Table Data
-    data = [["Subject","Marks","Grade"]]
-
-    total_marks = 0
-
-    for r in results:
-
-        data.append([
-            r.Subject.Subject_Name,
-            r.Marks,
-            r.Grade
-        ])
-
-        total_marks += r.Marks
-
-    # Create Table
-    table = Table(data, colWidths=[250,100,100])
-
-    table.setStyle(TableStyle([
-        ('GRID',(0,0),(-1,-1),1,colors.black),
-        ('BACKGROUND',(0,0),(-1,0),colors.lightgrey),
-        ('ALIGN',(1,1),(-1,-1),'CENTER')
-    ]))
-
-    elements.append(table)
-
-    elements.append(Spacer(1,20))
-
-    # SGPA
-    sgpa = round(total_marks/(len(results)*10),2)
-
-    elements.append(Paragraph(f"SGPA : {sgpa}", styles['Heading3']))
-
-    doc.build(elements)
-
-    return response
-
-    student_id = request.session['student_id']
-
-    student = StudentDb.objects.get(id=student_id)
-    results = ResultDb.objects.filter(Student_id=student_id)
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="marksheet.pdf"'
-
-    p = canvas.Canvas(response, pagesize=A4)
-
-    width, height = A4
-
-    # College Name
-    p.setFont("Helvetica-Bold", 18)
-    p.drawCentredString(width/2, height-50, "STUDENT RESULT MANAGEMENT")
-
-    p.setFont("Helvetica", 14)
-    p.drawCentredString(width/2, height-70, "Semester Marksheet")
-
-    # Student Details
-    p.setFont("Helvetica", 12)
-    p.drawString(50, height-120, f"Name : {student.Name}")
-    p.drawString(50, height-140, f"Register No : {student.Roll_Number}")
-    p.drawString(50, height-160, f"Class : {student.Class.Class_Name}")
-
-    # Table Header
-    y = height-200
-
-    p.setFont("Helvetica-Bold", 12)
-
-    p.drawString(50, y, "Subject")
-    p.drawString(250, y, "Marks")
-    p.drawString(350, y, "Grade")
-
-    p.line(50, y-5, 500, y-5)
-
-    y -= 30
-
-    total_marks = 0
-
-    for r in results:
-
-        p.setFont("Helvetica", 11)
-
-        p.drawString(50, y, r.Subject.Subject_Name)
-        p.drawString(250, y, str(r.Marks))
-        p.drawString(350, y, r.Grade)
-
-        total_marks += r.Marks
-
-        y -= 25
-
-    # SGPA Calculation (Example)
-    sgpa = round(total_marks / (len(results)*10),2)
-
-    y -= 20
-
-    p.setFont("Helvetica-Bold", 12)
-    p.drawString(50, y, f"SGPA : {sgpa}")
-
-    y -= 30
-
-    # Result Status
-    status = "PASS"
-
-    for r in results:
-        if r.Marks < 40:
-            status = "FAIL"
-
-    p.drawString(50, y, f"Result : {status}")
-
-    p.save()
-
-    return response
-
-    student_id = request.session['student_id']
-
-    student = StudentDb.objects.get(id=student_id)
-
-    results = ResultDb.objects.filter(Student_id=student_id)
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="marksheet.pdf"'
-
-    p = canvas.Canvas(response)
-
-    p.setFont("Helvetica", 14)
-    p.drawString(200, 800, "Student Marksheet")
-
-    p.drawString(50, 760, f"Name : {student.Name}")
-    p.drawString(50, 740, f"Register No : {student.Roll_Number}")
-
-    y = 700
-
-    p.drawString(50, y, "Subject")
-    p.drawString(250, y, "Marks")
-    p.drawString(350, y, "Grade")
-
-    y -= 30
-
-    for r in results:
-
-        p.drawString(50, y, r.Subject.Subject_Name)
-        p.drawString(250, y, str(r.Marks))
-        p.drawString(350, y, r.Grade)
-
-        y -= 25
-
-    p.save()
-
-    return response
+   

@@ -79,28 +79,27 @@
     <div class="container-fluid p-0">
         <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 px-lg-5">
             <a href="index.html" class="navbar-brand ml-lg-3">
-                <h1 class="m-0 text-uppercase text-primary"><i class="fa fa-book-reader mr-3"></i>Edukate</h1>
+                <h1 class="m-0 text-uppercase text-primary"><i class="fa fa-book-reader mr-3"></i>EduAccess</h1>
             </a>
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
                 <div class="navbar-nav mx-auto py-0">
-                    <a href="index.html" class="nav-item nav-link">Home</a>
-                    <a href="about.html" class="nav-item nav-link">About</a>
-                    <a href="course.html" class="nav-item nav-link active">Courses</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
-                        <div class="dropdown-menu m-0">
-                            <a href="feature.html" class="dropdown-item">Features</a>
-                            <a href="team.html" class="dropdown-item">Instructors</a>
-                            <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                        </div>
-                    </div>
+                    <a href="{% url 'home' %}" class="nav-item nav-link ">Home</a>
+                    <a href="{% url 'profile' %}" class="nav-item nav-link">Profile</a>
+                    <a href="{% url 'view_result'%}" class="nav-item nav-link active">View Result</a>
                     <a href="contact.html" class="nav-item nav-link">Contact</a>
+                    <a href="{% url 'notes' %}" class="nav-item nav-link">Notes</a>
                 </div>
-                <a href="https://htmlcodex.com/downloading/?item=1574"
-                    class="btn btn-primary py-2 px-4 d-none d-lg-block">Buy Pro Version</a>
+                <div class="dropdown user-dropdown d-none d-lg-block">
+                    <button class="btn btn-primary " type="button">
+                        {{ student.Name }}
+                    </button>
+                    <a href="{% url 'student_logout' %}" class="btn btn-danger">
+                        Logout
+                    </a>
+                </div>
             </div>
         </nav>
     </div>
@@ -110,11 +109,11 @@
     <!-- Header Start -->
     <div class="jumbotron jumbotron-fluid page-header position-relative overlay-bottom" style="margin-bottom: 90px;">
         <div class="container text-center py-5">
-            <h1 class="text-white display-1">Courses</h1>
+            <h1 class="text-white display-1">Result</h1>
             <div class="d-inline-flex text-white mb-5">
                 <p class="m-0 text-uppercase"><a class="text-white" href="">Home</a></p>
                 <i class="fa fa-angle-double-right pt-1 px-3"></i>
-                <p class="m-0 text-uppercase">Courses</p>
+                <p class="m-0 text-uppercase">Result</p>
             </div>
             <div class="mx-auto mb-5" style="width: 100%; max-width: 600px;">
                 <div class="input-group">
@@ -127,11 +126,6 @@
                             <a class="dropdown-item" href="#">Courses 3</a>
                         </div>
                     </div> -->
-                    <input type="text" class="form-control border-light" style="padding: 30px 25px;"
-                        placeholder="Keyword">
-                    <div class="input-group-append">
-                        <button class="btn btn-secondary px-4 px-lg-5">Search</button>
-                    </div>
                 </div>
             </div>
         </div>

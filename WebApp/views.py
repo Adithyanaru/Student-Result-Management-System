@@ -500,6 +500,8 @@ def notes(request):
 def download_note(request, id):
     note = NotesDb.objects.get(id=id)
     return FileResponse(note.Notes.open(), as_attachment=True)
+def contact(request):
+    return render(request,'Contact.html')
 
 
 

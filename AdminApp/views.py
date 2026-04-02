@@ -23,7 +23,7 @@ from django.db.models import Avg
     # return render(request,'Dashboard.html',context)
 def dashboard(request):
 
-    total_student = StudentDb.objects.count()
+ 
 
     class_performance = (
         ResultDb.objects
@@ -41,10 +41,10 @@ def dashboard(request):
 
 
     context = {
-        'total_student': total_student,
+        'total_student': StudentDb.objects.count(),
         'total_class': ClassDb.objects.count(),
         'total_subject': SubjectDb.objects.count(),
-        'total_result': ResultDb.objects.count(),
+        'total_arrers': ArrearApplication.objects.count(),
         'class_labels': class_labels,
         'class_marks': class_marks
     }

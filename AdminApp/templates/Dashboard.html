@@ -253,9 +253,47 @@
                 </div>
             </nav>
             <!-- Navbar End -->
-
-
-            <!-- Sale & Revenue Start -->
+              <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-user-graduate   fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2"> </i>Total Student</p>
+                                <h6 class="mb-0">{{ total_student }}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chalkboard fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2"></i>Total Class</p>
+                                <h6 class="mb-0">{{ total_class }}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-book fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Today Subjects</p>
+                                <h6 class="mb-0">{{ total_subject }}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-exclamation-circle fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Total Arrers</p>
+                                <h6 class="mb-0">{{ total_arrers }}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Sale & Revenue End -->
             {% block content%}
             <div class="card mt-4">
                 <div class="card-header">

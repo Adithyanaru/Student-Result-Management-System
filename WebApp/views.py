@@ -501,7 +501,10 @@ def download_note(request, id):
     note = NotesDb.objects.get(id=id)
     return FileResponse(note.Notes.open(), as_attachment=True)
 def contact(request):
-    return render(request,'Contact.html')
+    if 'st_login' not in request.session:
+        return redirect('st_login')
+    student = StudentDb.objects.get(id=request.session['st_login'])
+    return render(request,'Contact.html', {'student': student})
 
 
 

@@ -198,37 +198,13 @@ Student Result Management System
             subject,
             message,
             settings.EMAIL_HOST_USER,
-            [Email],
+            [Email], #Email of the student
             fail_silently=False
         )
 
         messages.success(request, "Student Added Successfully")
-        return redirect(add_student)
-    if request.method == 'POST':
-        Name = request.POST.get('name')
-        Email = request.POST.get('email')
-        Dob = request.POST.get('dob')
-        Class_id = request.POST.get('class')
-        Roll_number = request.POST.get('roll_number')
-        Gender = request.POST.get('gender')
-        Phone_number = request.POST.get('phone_number')
-
-        Photo = request.FILES.get('photo')   
-
-        obj = StudentDb(
-            Name=Name,
-            Email=Email,
-            Dob=Dob,
-            Class_id=Class_id,
-            Roll_Number=Roll_number,
-            gender=Gender,
-            Phone_number=Phone_number,
-            Student_Photo=Photo  
-        )
-
-        obj.save()
-        messages.success(request, "Student Added Successfully")
-        return redirect(add_student)    
+        return redirect(add_student) 
+      
 def delete_student(request,s_id):
     s=StudentDb.objects.get(id=s_id)
     s.delete()
@@ -281,7 +257,7 @@ def save_subject_combination(request):
         Subject_id = request.POST.get('subject')
 
         obj = SubjectCombinationDb(
-            Class_Section_id=Class_id,      # foreign key id save
+            Class_Section_id=Class_id,      # _id can save directly insted of using ORM
             Subject_Name_id=Subject_id
         )
         obj.save()
@@ -341,7 +317,7 @@ def get_students_subjects(request):
                 'Name': s.Name
             })
 
-        # subjects for that class
+        # select_related : joining related tables
         subjects = SubjectCombinationDb.objects.filter(Class_Section_id=class_id).select_related('Subject_Name')
 
         subject_list = []
@@ -380,8 +356,6 @@ def get_students_subjects(request):
 #                     )
 
 #         return redirect('add_result')  # back to page
-
-
 
 
 
@@ -426,13 +400,13 @@ def manage_result(request):
 
         grouped = list(temp.values())
 
-        # 📧 Send email
+        # Send email
         for g in grouped:
 
             student = g['student']
 
             if not student.Email:
-                continue   # skip if email empty
+                continue
 
             total = g['total']
             status = g['status']
@@ -444,21 +418,19 @@ def manage_result(request):
                 subject_marks += f"{subject.Subject_Name} : {mark}\n"
 
             message = f"""
-    Hello {student.Name},
+Hello {student.Name},
 
-    Your exam results have been declared.
+Your exam results have been declared.
 
-    {subject_marks}
+{subject_marks}
 
-    Total Marks: {total}
-    Status: {status}
+Total Marks: {total}
+Status: {status}
 
-    Login to the student portal to view full details.
+Login to the student portal to view full details.
 
-    Student Result Management System
-    """
-
-            print("Sending email to:", student.Email)  # debug
+Student Result Management System
+"""
 
             send_mail(
                 "Exam Result Declared",
@@ -476,88 +448,6 @@ def manage_result(request):
     }
 
     return render(request, 'Manage_Result.html', context)
-    class_id = request.GET.get('class')
-    classes = ClassDb.objects.all()
-
-    grouped = []
-    subjects = []
-    subject_list = []
-
-    if class_id:
-
-        subjects = SubjectCombinationDb.objects.filter(
-            Class_Section_id=class_id
-        ).select_related('Subject_Name')
-
-        subject_list = [s.Subject_Name for s in subjects]
-
-        results = ResultDb.objects.select_related(
-            'Class', 'Student', 'Subject'
-        ).filter(Class_id=class_id)
-
-        temp = defaultdict(lambda: {
-            'class': None,
-            'student': None,
-            'marks': {},
-            'total': 0,
-            'status': 'PASS'
-        })
-
-        for r in results:
-            temp[r.Student.id]['class'] = r.Class
-            temp[r.Student.id]['student'] = r.Student
-            temp[r.Student.id]['marks'][r.Subject.id] = r.Marks
-            temp[r.Student.id]['total'] += r.Marks
-
-            if r.Marks < 40:
-                temp[r.Student.id]['status'] = 'FAIL'
-
-        grouped = temp.values()
-
-        # 📧 Send Email to Each Student
-        for g in grouped:
-
-            student = g['student']
-            total = g['total']
-            status = g['status']
-
-            subject_marks = ""
-            for sub_id, mark in g['marks'].items():
-                subject = SubjectDb.objects.get(id=sub_id)
-                subject_marks += f"{subject.Subject_Name} : {mark}\n"
-
-            message = f"""
-    Hello {student.Name},
-
-    Your exam results have been declared.
-
-    {subject_marks} 
-
-    Total Marks: {total}
-    Status: {status}
-
-    Login to the student portal to view full details.
-
-    Student Result Management System
-    """
-
-            send_mail(
-                "Exam Result Declared",
-                message,
-                settings.EMAIL_HOST_USER,
-                [student.Email],
-                fail_silently=False
-            )
-
-    context = {
-        'grouped_results': grouped,
-        'subjects': subject_list,
-        'classes': classes,
-        'selected_class': class_id
-    }
-
-    return render(request, 'Manage_Result.html', context)
-
 
 
 def save_result(request):
@@ -569,14 +459,14 @@ def save_result(request):
 
         student = StudentDb.objects.get(id=student_id)
 
-        # DELETE OLD RESULTS
+        
         ResultDb.objects.filter(Class_id=class_id, Student_id=student_id).delete()
 
         total = 0
         status = "PASS"
         subject_marks = ""
 
-        # SAVE NEW RESULTS
+        
         for key, value in request.POST.items():
 
             if key.startswith("mark_") and value != "":
@@ -600,7 +490,7 @@ def save_result(request):
                 if marks < 40:
                     status = "FAIL"
 
-        # 📧 SEND EMAIL
+        # SEND EMAIL
         message = f"""
 Hello {student.Name},
 
@@ -625,48 +515,22 @@ Student Result Management System
         )
 
         return redirect('add_result')
-    if request.method == "POST":
-        class_id = request.POST.get('class')
-        student_id = request.POST.get('student')
-
-        #  DELETE OLD RESULT FIRST 
-        ResultDb.objects.filter(Class_id=class_id, Student_id=student_id).delete()
-
-        #  SAVE NEW RESULT
-        for key, value in request.POST.items():
-            if key.startswith("mark_") and value != "":
-                subject_id = key.split("_")[1]
-
-                ResultDb.objects.create(
-                    Class_id=class_id,
-                    Student_id=student_id,
-                    Subject_id=subject_id,
-                    Marks=value
-                )
-
-        return redirect('add_result')
-
-
-
+    
+    
 def manage_result(request):
     class_id = request.GET.get('class')
     classes = ClassDb.objects.all()
-
     grouped = []
     subjects = []
-
+    subject_list = []
     if class_id:
-
         subjects = SubjectCombinationDb.objects.filter(
             Class_Section_id=class_id
         ).select_related('Subject_Name')
-
         subject_list = [s.Subject_Name for s in subjects]
-
         results = ResultDb.objects.select_related(
             'Class', 'Student', 'Subject'
         ).filter(Class_id=class_id)
-
         temp = defaultdict(lambda: {
             'class': None,
             'student': None,
@@ -684,7 +548,7 @@ def manage_result(request):
             student['marks'][r.Subject.id] = r.Marks
             student['total'] += r.Marks
 
-            #FAIL CONDITION
+            # FAIL CONDITION
             if r.Marks < 40:
                 student['status'] = 'FAIL'
 
@@ -698,90 +562,51 @@ def manage_result(request):
     }
 
     return render(request, 'Manage_Result.html', context)
-    class_id = request.GET.get('class')
-    classes = ClassDb.objects.all()
 
-    grouped = []
-    subjects = []
-
-    if class_id:
-        # 🔥 Get subjects only for selected class
-        subjects = SubjectCombinationDb.objects.filter(
-            Class_Section_id=class_id
-        ).select_related('Subject_Name')
-
-        subject_list = [s.Subject_Name for s in subjects]
-
-        results = ResultDb.objects.select_related(
-            'Class', 'Student', 'Subject'
-        ).filter(Class_id=class_id)
-
-        temp = defaultdict(lambda: {
-            'class': None,
-            'student': None,
-            'marks': {},
-            'total': 0
-        })
-
-        for r in results:
-            temp[r.Student.id]['class'] = r.Class
-            temp[r.Student.id]['student'] = r.Student
-            temp[r.Student.id]['marks'][r.Subject.id] = r.Marks
-            temp[r.Student.id]['total'] += r.Marks
-
-        grouped = temp.values()
-
-    context = {
-        'grouped_results': grouped,
-        'subjects': subject_list if class_id else [],
-        'classes': classes,
-        'selected_class': class_id
-    }
-
-    return render(request, 'Manage_Result.html', context)
 def delete_result(request, student_id, class_id):
     ResultDb.objects.filter(Student_id=student_id, Class_id=class_id).delete()
     messages.success(request, "Result deleted successfully!")
     return redirect(f'/manage/manage_result/?class={class_id}')
-def edit_result(request, student_id, class_id):
+# def edit_result(request, student_id, class_id):
 
-    student = StudentDb.objects.get(id=student_id)
-    class_obj = ClassDb.objects.get(id=class_id)
+#     student = StudentDb.objects.get(id=student_id)
+#     class_obj = ClassDb.objects.get(id=class_id)
 
-    subjects = SubjectCombinationDb.objects.filter(Class_Section_id=class_id)
+#     subjects = SubjectCombinationDb.objects.filter(Class_Section_id=class_id)
 
-    results = ResultDb.objects.filter(Student=student)
+#     results = ResultDb.objects.filter(Student=student)
 
-    marks = {}
+#     marks = {}
 
-    for r in results:
-        marks[r.Subject.id] = r.Marks
+#     for r in results:
+#         marks[r.Subject.id] = r.Marks
 
-    context = {
-        'student': student,
-        'class': class_obj,
-        'subjects': subjects,
-        'marks': marks
-    }
+#     context = {
+#         'student': student,
+#         'class': class_obj,
+#         'subjects': subjects,
+#         'marks': marks
+#     }
 
-    return render(request,'Edit_Result.html',context)
-def update_result(request, student_id, class_id):
+#     return render(request,'Edit_Result.html',context)
+# def update_result(request, student_id, class_id):
 
-    student = StudentDb.objects.get(id=student_id)
+#     student = StudentDb.objects.get(id=student_id)
 
-    subjects = SubjectCombinationDb.objects.filter(Class_Section_id=class_id)
+#     subjects = SubjectCombinationDb.objects.filter(Class_Section_id=class_id)
 
-    for sub in subjects:
+#     for sub in subjects:
 
-        mark = request.POST.get(f'mark_{sub.Subject_Name.id}')
+#         mark = request.POST.get(f'mark_{sub.Subject_Name.id}')
 
-        result = ResultDb.objects.get(Student=student, Subject=sub.Subject_Name)
+#         result = ResultDb.objects.get(Student=student, Subject=sub.Subject_Name)
 
-        result.Mark = mark
-        result.save()
+#         result.Mark = mark
+#         result.save()
 
-    return redirect('manage_results')
+#     return redirect('manage_results')
 
+def change_password(request):
     if request.method=='POST':
         old_passord=request.POST.get('oldpassword')
         new_password=request.POST.get('newpassword')

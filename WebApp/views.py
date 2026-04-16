@@ -299,30 +299,50 @@ def apply_arrear(request):
     return render(request,"Apply_Arrear.html",{"arrears": arrears})
 def save_arrear_payment(request):
 
-    student_id = request.session['student_id']
+    if request.method != "POST":
+        return redirect('home')
+
+    student_id = request.session.get('student_id')
     subjects = request.session.get("arrear_subjects", [])
+
+    if not student_id or not subjects:
+        return redirect('home')
 
     student = StudentDb.objects.get(id=student_id)
 
     for sub in subjects:
 
-        subject = SubjectDb.objects.get(id=sub)
+        # ✅ skip empty values
+        if not sub:
+            continue
 
-        ArrearApplication.objects.create(
+        subject = SubjectDb.objects.get(id=int(sub))
+
+        # ✅ prevent duplicate entries
+        if not ArrearApplication.objects.filter(
             Student=student,
-            Subject=subject,
-            Amount=200,
-            Payment_Status="Paid"
-        )
+            Subject=subject
+        ).exists():
+
+            ArrearApplication.objects.create(
+                Student=student,
+                Subject=subject,
+                Amount=200,
+                Payment_Status="Paid"
+            )
+
+    # ✅ clear session after payment
+    request.session["arrear_subjects"] = []
 
     return redirect('home')
-def payment_list(request):
 
-    payments = ArrearApplication.objects.select_related('Student','Subject').all()
+# def payment_list(request):
 
-    return render(request, "manage/payment.html", {
-        "payments": payments
-    })
+#     payments = ArrearApplication.objects.select_related('Student','Subject').all()
+
+#     return render(request, "manage/payment.html", {
+#         "payments": payments
+#     })
 def download_marksheet(request):
 
     student_id = request.session['student_id']

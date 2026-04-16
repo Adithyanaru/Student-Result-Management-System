@@ -8,6 +8,7 @@ urlpatterns=[
     path('admin_login/',views.admin_login,name='admin_login'),
     path('admin_logout/',views.admin_logout,name='admin_logout'),
     path('manage_student/',views.manage_student,name='manage_student'),
+    path('change_password/',views.change_password,name='change_password'),
     
     path('add_class/',views.add_class,name='add_class'),
     path('manage_class/',views.manage_class,name='manage_class'),
@@ -46,8 +47,8 @@ urlpatterns=[
     path('save_result/',views.save_result,name='save_result'),
     path('manage_result/',views.manage_result,name='manage_result'),
     path('delete_result/<int:student_id>/<int:class_id>/', views.delete_result, name='delete_result'),
-    path('edit_result/<int:student_id>/<int:class_id>/', views.edit_result, name='edit_result'),
-    path('update_result/<int:student_id>/<int:class_id>/', views.update_result, name='update_result'),
+    # path('edit_result/<int:student_id>/<int:class_id>/', views.edit_result, name='edit_result'),
+    # path('update_result/<int:student_id>/<int:class_id>/', views.update_result, name='update_result'),
     
     path('payment/',views.payment,name='payment'),
     

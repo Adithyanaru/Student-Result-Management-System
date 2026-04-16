@@ -53,30 +53,30 @@
         </form>
     </div>
     <script>
-        function must() {
-            name = document.getElementById("Name").value;
-            email = document.getElementById("inputEmail3").value;
-            dob = document.getElementById("DateOfBirth").value;
-            id = document.getElementById("id").value;
-            Class = document.getElementById("class").value;
-            gender = document.getElementById("gender").value;
-            if (name == '' || email == '' || dob == '' || id == '' || Class == '' || gender == '') {
-                alert("All fields are required");
-                return false;
-            }
-            else {
-                alert("Student added successfully");
-                return true;
-            }
+        // function must() {
+        //     name = document.getElementById("Name").value;
+        //     email = document.getElementById("inputEmail3").value;
+        //     dob = document.getElementById("DateOfBirth").value;
+        //     id = document.getElementById("id").value;
+        //     Class = document.getElementById("class").value;
+        //     gender = document.getElementById("gender").value;
+        //     if (name == '' || email == '' || dob == '' || id == '' || Class == '' || gender == '') {
+        //         alert("All fields are required");
+        //         return false;
+        //     }
+        //     else {
+        //         alert("Student added successfully");
+        //         return true;
+        //     }
 
-        }
+        // }
         document.getElementById("class_id").addEventListener("change", function () {
 
             const classID = this.value;
             if (!classID) return;
 
             fetch(`/manage/get_students_subjects?class_id=${classID}`)
-                .then(res => res.json())
+                .then(res => res.json()) // .then is a method that runs after an asynchronous task is completed successfully
                 .then(data => {
 
                     // ===== STUDENTS =====
@@ -98,7 +98,7 @@
                         subjectDiv.innerHTML += `
                 <div style="margin-bottom:10px;">
                     <label>${sub.name}</label>
-                    <input type="number" name="mark_${sub.id}" class="form-control" placeholder="Enter mark">
+                    <input type="number" name="mark_${sub.id}" max="100" class="form-control" placeholder="Enter mark">
                 </div>
             `;
                     });
